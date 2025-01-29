@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Medico.Domain
-build_property.ProjectDir = C:\Users\CodeZombie\source\repos\AgendamentoConsultasMedicas\Medicos.Domain\
+build_property.ProjectDir = D:\OneDrive\Desktop\HackatonFiapPos\Medicos.Domain\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

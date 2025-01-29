@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\CodeZombie\\source\\repos\\AgendamentoConsultasMedicas\\Paciente.Test\\Paciente.Test.csproj": {}
+    "D:\\OneDrive\\Desktop\\HackatonFiapPos\\Paciente.Test\\Paciente.Test.csproj": {}
   },
   "projects": {
-    "C:\\Users\\CodeZombie\\source\\repos\\AgendamentoConsultasMedicas\\Paciente.Test\\Paciente.Test.csproj": {
+    "D:\\OneDrive\\Desktop\\HackatonFiapPos\\Paciente.Test\\Paciente.Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\CodeZombie\\source\\repos\\AgendamentoConsultasMedicas\\Paciente.Test\\Paciente.Test.csproj",
+        "projectUniqueName": "D:\\OneDrive\\Desktop\\HackatonFiapPos\\Paciente.Test\\Paciente.Test.csproj",
         "projectName": "Paciente.Test",
-        "projectPath": "C:\\Users\\CodeZombie\\source\\repos\\AgendamentoConsultasMedicas\\Paciente.Test\\Paciente.Test.csproj",
-        "packagesPath": "C:\\Users\\CodeZombie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\CodeZombie\\source\\repos\\AgendamentoConsultasMedicas\\Paciente.Test\\obj\\",
+        "projectPath": "D:\\OneDrive\\Desktop\\HackatonFiapPos\\Paciente.Test\\Paciente.Test.csproj",
+        "packagesPath": "C:\\Users\\wduty\\.nuget\\packages\\",
+        "outputPath": "D:\\OneDrive\\Desktop\\HackatonFiapPos\\Paciente.Test\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\CodeZombie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wduty\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -83,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
