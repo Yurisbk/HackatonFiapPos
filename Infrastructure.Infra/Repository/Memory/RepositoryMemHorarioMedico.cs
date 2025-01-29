@@ -5,8 +5,6 @@ namespace Infrastructure.Repository.Memory;
 
 public class RepositoryMemHorarioMedico: IRepositoryHorarioMedico
 {
-    List<HorarioMedico> Horarios = new();
-
     public void RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
         ArgumentNullException.ThrowIfNull(periodos);
@@ -18,15 +16,15 @@ public class RepositoryMemHorarioMedico: IRepositoryHorarioMedico
             periodo.Validar();
 
         // Exclui todos os horarios do dia da semana do medico
-        Horarios.RemoveAll(h => h.IdMedico == idMedico && h.DiaSemana == diaSemana);
+        MemDB.HorariosMedicos.RemoveAll(h => h.IdMedico == idMedico && h.DiaSemana == diaSemana);
 
         // Adiciona horarios para os periodos
         foreach (var periodo in periodos)
-            Horarios.Add(new HorarioMedico() { Id = Horarios.Max(h => h.Id!) + 1, IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo} );
+            MemDB.HorariosMedicos.Add(new HorarioMedico() { Id = MemDB.CriaChaveUnica(MemDB.HorariosMedicos), IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo} );
     }
 
     public HorarioMedico[] ListarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana)
-        => Horarios
+        => MemDB.HorariosMedicos
             .Where(horario => horario.IdMedico == idMedico && horario.DiaSemana == diaSemana)
             .OrderBy(horario => horario.Periodo.HoraInicial)
             .ToArray();

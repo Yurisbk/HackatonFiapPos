@@ -1,6 +1,6 @@
 ﻿using Domain.Entity;
 
-namespace Service.Service;
+namespace Domain.Interfaces.Service;
 
 public interface IServiceHorarioMedico
 {

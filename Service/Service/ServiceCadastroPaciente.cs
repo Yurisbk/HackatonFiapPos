@@ -2,9 +2,9 @@
 using Domain.Entity;
 using Domain.Interfaces.Service;
 
-namespace Services;
+namespace Service.Service;
 
-public class ServiceCadastroPaciente(IRepositoryPaciente repositorioPaciente): IServiceCadastroPaciente
+public class ServiceCadastroPaciente(IRepositoryPaciente repositorioPaciente) : IServiceCadastroPaciente
 {
     public Paciente? ResgatarPacientePorEmail(string email) => repositorioPaciente.ResgatarPacientePorEmail(email);
 

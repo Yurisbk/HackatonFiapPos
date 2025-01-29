@@ -6,11 +6,9 @@ namespace Infrastructure.Repository.Memory;
 
 public class RepositoryMemMedico: IRepositoryMedico
 {
-    List<Medico> Medicos = new();
+    public Medico? ResgatarMedicoPorId(int id) => MemDB.Medicos.FirstOrDefault(p => p.Id == id)?.DeepClone();
 
-    public Medico? ResgatarMedicoPorId(int id) => Medicos.FirstOrDefault(p => p.Id == id)?.DeepClone();
-
-    public Medico? ResgatarMedicoPorEmail(string email) => Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone();
+    public Medico? ResgatarMedicoPorEmail(string email) => MemDB.Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone();
 
     public void RegistarNovoMedico(Medico medico)
     {
@@ -19,16 +17,20 @@ public class RepositoryMemMedico: IRepositoryMedico
         medico.Validar();
 
         // Simula UKs
-        if (Medicos.Any(p => p.CPF == medico.CPF))
+
+        if (MemDB.Medicos.Any(m => m.CPF == medico.CPF))
             throw new ArgumentException("CPF já cadastrado");
 
-        if (Medicos.Any(p => p.EMail == medico.EMail))
+        if (MemDB.Medicos.Any(m => m.EMail == medico.EMail))
+            throw new ArgumentException("Email já cadastrado");
+
+        if (MemDB.Medicos.Any(m => m.CRM == medico.CRM))
             throw new ArgumentException("Email já cadastrado");
 
         // Simula PK
-        medico.Id = Medicos.Count == 0 ? 0 : Medicos.Max(p => p.Id) + 1;
+        medico.Id = MemDB.CriaChaveUnica(MemDB.Medicos);
 
-        Medicos.Add(medico.DeepClone());
+        MemDB.Medicos.Add(medico.DeepClone());
     }
 
     public void AlterarDadosMedico(Medico medico)
@@ -42,13 +44,17 @@ public class RepositoryMemMedico: IRepositoryMedico
             throw new ArgumentException("Médico não encontrado");
 
         // Simula UKs
-        if (Medicos.FirstOrDefault(p => p.CPF == medico.CPF) != medicoCadastro)
+
+        if (MemDB.Medicos.FirstOrDefault(m => m.CPF == medico.CPF) != medicoCadastro)
             throw new ArgumentException("CPF já cadastrado");
 
-        if (Medicos.FirstOrDefault(p => p.EMail == medico.EMail) != medicoCadastro)
+        if (MemDB.Medicos.FirstOrDefault(m => m.EMail == medico.EMail) != medicoCadastro)
             throw new ArgumentException("Email já cadastrado");
 
-        Medicos[Medicos.IndexOf(medicoCadastro)] = medico.DeepClone();
+        if (MemDB.Medicos.FirstOrDefault(m => m.CRM == medico.CRM) != medicoCadastro)
+            throw new ArgumentException("CRM já cadastrado");
+
+        MemDB.Medicos[MemDB.Medicos.IndexOf(medicoCadastro)] = medico.DeepClone();
     }
 
     public void ExcluirMedico(int id)
@@ -57,7 +63,6 @@ public class RepositoryMemMedico: IRepositoryMedico
         if (medicoCadastro == null)
             throw new ArgumentException("Médico não encontrado");
 
-        Medicos.RemoveAt(Medicos.FirstOrDefault(p => p.Id == id)?.Id ?? -1);
-
+        MemDB.Medicos.RemoveAt(MemDB.Medicos.FirstOrDefault(medico => medico.Id == id)?.Id ?? -1);
     }
 }

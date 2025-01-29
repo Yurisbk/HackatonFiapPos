@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Domain.Interfaces.Repository;
+using Domain.Interfaces.Service;
 
 namespace Service.Service;
 
@@ -18,6 +19,7 @@ public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositor
         foreach (var periodo in periodos)
             periodo.Validar();
 
+        // Checa conflitos de horario
         var conflito = Periodo.ChecaConflitos(periodos);
         if (conflito != null)
             throw new ArgumentException($"Conflito de horario: {conflito.Value.periodo1} - {conflito.Value.periodo2}.");
