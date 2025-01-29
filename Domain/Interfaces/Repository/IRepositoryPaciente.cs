@@ -2,7 +2,7 @@
 
 namespace Domain.Interfaces.Repository;
 
-public interface IRepositorioPaciente
+public interface IRepositoryPaciente
 {
     Paciente? ResgatarPacientePorId(int id);
     Paciente? ResgatarPacientePorEmail(string email);

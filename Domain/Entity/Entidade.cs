@@ -3,4 +3,6 @@
 public class Entidade
 {
     public int? Id;
+
+    public override string ToString() => $"{Id}";
 }

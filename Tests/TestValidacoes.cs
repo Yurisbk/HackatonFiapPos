@@ -45,4 +45,29 @@ public class TestValidacoes
         horarioMedico = new HorarioMedico(DayOfWeek.Monday, 18, 8);
         Assert.ThrowsAny<Exception>(() => horarioMedico.Validar());
     }
+
+    [Fact]
+    public void TestarValidacoesPeriodo()
+    {
+        Periodo periodo = new(8, 18);
+        periodo.Validar();
+
+        periodo = new(-1, 18);
+        Assert.ThrowsAny<Exception>(() => periodo.Validar());
+
+        periodo = new(0, 24);
+        periodo.Validar();
+
+        periodo = new(12.1, 12);
+        Assert.ThrowsAny<Exception>(() => periodo.Validar());
+
+        periodo = new(0, 24.0001);
+        Assert.ThrowsAny<Exception>(() => periodo.Validar());
+
+        var conflitos = Periodo.ChecaConflitos(new Periodo(8, 18), new Periodo(8, 18));
+        Assert.Equal(conflitos?.periodo1.HoraInicial.Hours, 8);
+
+        conflitos = Periodo.ChecaConflitos(new Periodo(0, 2), new Periodo(4, 6), new Periodo(1, 3));
+        Assert.Equal(conflitos?.periodo2.HoraInicial.Hours, 1);
+    }
 }

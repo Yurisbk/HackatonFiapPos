@@ -4,7 +4,7 @@ using Domain.Entity;
 using Domain.Interfaces.Repository;
 using Force.DeepCloner;
 
-public class RepositoryMemPaciente : IRepositorioPaciente
+public class RepositoryMemPaciente : IRepositoryPaciente
 {
     List<Paciente> Pacientes = new();
 

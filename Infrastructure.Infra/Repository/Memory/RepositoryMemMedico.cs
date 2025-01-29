@@ -4,7 +4,7 @@ using Force.DeepCloner;
 
 namespace Infrastructure.Repository.Memory;
 
-public class RepositoryMemMedico: IRepositorioMedico
+public class RepositoryMemMedico: IRepositoryMedico
 {
     List<Medico> Medicos = new();
 

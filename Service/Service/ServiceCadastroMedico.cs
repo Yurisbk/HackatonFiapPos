@@ -4,7 +4,7 @@ using Domain.Interfaces.Service;
 
 namespace Service.Service;
 
-public class ServiceCadastroMedico(IRepositorioMedico repositorioMedico): IServiceCadastroMedico
+public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico): IServiceCadastroMedico
 {
     public Medico? ResgatarMedicoPorEmail(string email) => repositorioMedico.ResgatarMedicoPorEmail(email);
 
