@@ -5,7 +5,7 @@ using Domain.Interfaces.Service;
 
 namespace Service.Service;
 
-public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IRepositoryConsulta repositoryConsulta)
+public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IRepositoryConsulta repositoryConsulta): IServiceConsulta
 {
     public class AgendasMedicos
     {
@@ -63,7 +63,7 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
         }
     }
 
-    DTOHorariosLivre[] ListarHorariosLivres(int dias = 15)
+    public DTOHorariosLivre[] ListarHorariosLivres(int dias = 15)
     {
         AgendasMedicos agendasMedicos = new();
 
@@ -73,7 +73,7 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
 
         DateTime dia = DateTime.Now.Date;
         DateTime fim = dia.AddDays(dias);
-        while (dia.Date <= fim.Date)
+        while (dia.Date < fim.Date)
         {
             // Armazena horarios medicos da semana
             if (!horariosSemana.ContainsKey(dia.DayOfWeek))
@@ -97,5 +97,8 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
             agendasMedicos[consulta.IdMedico, consulta.DataHora] = false;
 
         return agendasMedicos.ListarHorariosLivres();
-    }       
+    }
+
+    public void RegistrarConsulta(int pacienteId, int medicoId, DateTime horario) 
+        => repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
 }
