@@ -23,9 +23,10 @@ public class RepositoryMemHorarioMedico: IRepositoryHorarioMedico
             MemDB.HorariosMedicos.Add(new HorarioMedico() { Id = MemDB.CriaChaveUnica(MemDB.HorariosMedicos), IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo} );
     }
 
-    public HorarioMedico[] ListarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana)
+    public HorarioMedico[] ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana)
         => MemDB.HorariosMedicos
-            .Where(horario => horario.IdMedico == idMedico && horario.DiaSemana == diaSemana)
-            .OrderBy(horario => horario.Periodo.HoraInicial)
+            .Where(horario => horario.DiaSemana == diaSemana)
+            .OrderBy(horario => horario.IdMedico)
+            .ThenBy(horario => horario.Periodo.HoraInicial)
             .ToArray();
 }

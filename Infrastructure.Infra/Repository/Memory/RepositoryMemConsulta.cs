@@ -3,7 +3,7 @@ using Domain.Interfaces.Repository;
 
 namespace Infrastructure.Repository.Memory;
 
-public class RepositoryMemConsulta : IRepositoryMemConsulta
+public class RepositoryMemConsulta : IRepositoryConsulta
 {
     public void RegistrarConsulta(Consulta consulta)
     {

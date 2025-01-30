@@ -2,7 +2,7 @@
 
 namespace Domain.Interfaces.Repository;
 
-public interface IRepositoryMemConsulta
+public interface IRepositoryConsulta
 {
     void RegistrarConsulta(Consulta consulta);
     Consulta[] ListarProximasConsultas(int dias = 15);

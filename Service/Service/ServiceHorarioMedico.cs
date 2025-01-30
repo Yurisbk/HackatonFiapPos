@@ -6,8 +6,8 @@ namespace Service.Service;
 
 public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico): IServiceHorarioMedico
 {
-    public HorarioMedico[] ListarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana) =>
-        repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(idMedico, diaSemana);
+    public HorarioMedico[] ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana) =>
+        repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(diaSemana);
 
     public void RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
