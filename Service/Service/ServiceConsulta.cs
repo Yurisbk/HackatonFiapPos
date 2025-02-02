@@ -99,6 +99,8 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
         return agendasMedicos.ListarHorariosLivres();
     }
 
-    public void RegistrarConsulta(int pacienteId, int medicoId, DateTime horario) 
-        => repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
+    public void RegistrarConsulta(int pacienteId, int medicoId, DateTime horario)
+    {
+        repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
+    }
 }
