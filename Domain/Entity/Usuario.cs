@@ -1,6 +1,7 @@
-﻿namespace Domain.DTO;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class Usuario : Pessoa
+namespace Domain.DTO;
+
+public class Usuario : IdentityUser
 {
-    public string? HashSenha;
 }
