@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendamentoConsultasMedicas", "AgendamentoConsultasMedicas\AgendamentoConsultasMedicas.csproj", "{10F724DD-8A9E-4B6A-889B-A898B37E3B56}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D} = {2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure.Infra\Infrastructure.csproj", "{BACEDCA8-5EE6-437A-AB72-51DA10AC4FF0}"
 EndProject
@@ -13,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{C6A8F35F-1321-4D0A-A95F-30FCC922CD63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumerNotificacao", "ConsumerNotificacao\ConsumerNotificacao.csproj", "{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +50,10 @@ Global
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿namespace Domain.Entity;
+﻿namespace Domain.DTO;
 
 public class Consulta: Entidade
 {

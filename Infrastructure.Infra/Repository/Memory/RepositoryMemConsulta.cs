@@ -1,4 +1,4 @@
-﻿using Domain.Entity;
+﻿using Domain.DTO;
 using Domain.Interfaces.Repository;
 
 namespace Infrastructure.Repository.Memory;

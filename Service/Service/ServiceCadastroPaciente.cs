@@ -1,5 +1,5 @@
 ﻿using Domain.Interfaces.Repository;
-using Domain.Entity;
+using Domain.DTO;
 using Domain.Interfaces.Service;
 
 namespace Service.Service;

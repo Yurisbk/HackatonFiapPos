@@ -1,4 +1,4 @@
-using Domain.Entity;
+using Domain.DTO;
 using Domain.Interfaces.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Tests.Integration.Fixture;

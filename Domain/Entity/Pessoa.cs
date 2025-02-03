@@ -1,7 +1,7 @@
 ﻿using Domain.Interfaces;
 using Domain.Validation;
 
-namespace Domain.Entity;
+namespace Domain.DTO;
 
 public class Pessoa : Entidade, IValidavel
 {

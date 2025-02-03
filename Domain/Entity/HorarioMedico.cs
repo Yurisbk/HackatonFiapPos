@@ -1,6 +1,6 @@
 ﻿using Domain.Interfaces;
 
-namespace Domain.Entity;
+namespace Domain.DTO;
 
 public struct Periodo: IValidavel
 {
