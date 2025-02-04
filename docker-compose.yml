@@ -19,7 +19,16 @@ services:
       PGADMIN_DEFAULT_EMAIL: "hackaton@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "123456"
     ports:
-      - "54321:80"
+      - "8081:80"
+    depends_on:
+      - postgres
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://root:root@postgres:5432/root?sslmode=disable
+    ports:
+      - "9187:9187"
     depends_on:
       - postgres
 
@@ -36,3 +45,48 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  rabbitmq_exporter:
+    image: kbudde/rabbitmq-exporter
+    environment:
+      - RABBIT_URL=http://rabbitmq:15672
+      - RABBIT_USER=guest
+      - RABBIT_PASSWORD=guest
+    ports:
+      - "9419:9419"
+    depends_on:
+      - rabbitmq
+
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      # - api
+      - rabbitmq_exporter
+      - postgres_exporter
+
+  grafana:
+    image: grafana/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+

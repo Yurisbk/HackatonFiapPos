@@ -1,0 +1,46 @@
+groups:
+  - name: rabbitmq_rules
+    rules:
+      # Soma das mensagens em cada fila
+      - record: rabbitmq_queue_messages_total
+        expr: sum(rabbitmq_queue_messages) by (queue)
+      
+      # Memória usada pelo RabbitMQ (em MB)
+      - record: rabbitmq_memory_used_mb
+        expr: rabbitmq_node_mem_used_bytes / 1024 / 1024
+
+      # Uso de CPU (taxa de variação dos segundos de CPU usados, por instância)
+      - record: rabbitmq_cpu_usage_rate
+        expr: rate(rabbitmq_node_cpu_seconds_total[1m])
+
+      # Latência média de publicação de mensagens (por fila)
+      - record: rabbitmq_publish_latency_avg
+        expr: avg(rabbitmq_queue_message_publish_latency_seconds) by (queue)
+
+  - name: postgres_rules
+    rules:
+      # Número de conexões ativas
+      - record: postgres_active_connections
+        expr: pg_stat_activity_count
+
+      # Taxa de queries executadas por segundo (usando pg_stat_statements)
+      - record: postgres_queries_per_second
+        expr: rate(pg_stat_statements_calls[1m])
+
+      # Taxa de acerto do cache em porcentagem
+      - record: postgres_cache_hit_percentage
+        expr: (pg_stat_database_blks_hit) / (pg_stat_database_blks_hit + pg_stat_database_blks_read) * 100
+
+  - name: api_rules
+    rules:
+      # Número de requisições por segundo, agrupado por método e endpoint
+      - record: api_requests_per_second
+        expr: sum(rate(http_requests_total[1m])) by (method, endpoint)
+
+      # Latência de resposta do endpoint – percentil 95 (histogram_quantile)
+      - record: api_request_latency_95
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le, method, endpoint))
+
+      # Latência média das requisições HTTP
+      - record: api_request_latency_avg
+        expr: avg(rate(http_request_duration_seconds_sum[1m]) / rate(http_request_duration_seconds_count[1m]))

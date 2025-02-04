@@ -5,6 +5,7 @@ using Domain.Interfaces.Service;
 using Service.Service;
 using Domain.Interfaces.Repository;
 using Domain.DTO;
+using Prometheus;
 
 namespace AgendamentoConsultasMedicas;
 
@@ -66,6 +67,10 @@ public class Program
 
         app.UseAuthorization();
 
+        #region .::Prometheus::.
+        app.UseMetricServer(); //endpoint /metrics
+        app.UseHttpMetrics();
+        #endregion
 
         app.MapControllers();
 

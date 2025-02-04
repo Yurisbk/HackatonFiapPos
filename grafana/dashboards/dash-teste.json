@@ -1,0 +1,94 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 0,
+    "panels": [
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "rabbitmq_queue_messages_total",
+            "interval": "",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ Queue Messages Total",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "rabbitmq_memory_used_mb",
+            "interval": "",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ Memory Used (MB)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "postgres_active_connections",
+            "interval": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Postgres Active Connections",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "api_requests_per_second",
+            "interval": "",
+            "refId": "A"
+          }
+        ],
+        "title": "API Requests Per Second",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [],
+    "templating": { "list": [] },
+    "time": { "from": "now-1h", "to": "now" },
+    "title": "ISSO É UMA BOMBAAA",
+    "uid": "simple-monitoring-dashboard",
+    "version": 1
+  }
+  

@@ -4,11 +4,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgendamentoConsultasMedicas", "AgendamentoConsultasMedicas\AgendamentoConsultasMedicas.csproj", "{10F724DD-8A9E-4B6A-889B-A898B37E3B56}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2539B1D5-AE3F-47E1-BE8E-FF3550CA252D} = {2539B1D5-AE3F-47E1-BE8E-FF3550CA252D}
-	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure.Infra\Infrastructure.csproj", "{BACEDCA8-5EE6-437A-AB72-51DA10AC4FF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Infra", "Infrastructure.Infra\Infrastructure.Infra.csproj", "{BACEDCA8-5EE6-437A-AB72-51DA10AC4FF0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{EC248095-F94A-4CCE-8962-5CEBC99FB75D}"
 EndProject
@@ -57,6 +54,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BACEDCA8-5EE6-437A-AB72-51DA10AC4FF0} = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD37C118-FB81-4987-BD7E-FD96207D3DE0}
