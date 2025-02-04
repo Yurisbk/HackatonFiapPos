@@ -38,5 +38,11 @@ namespace AgendamentoConsultasMedicas.Controllers
             
             return Ok();
         }
+        [Authorize]
+        [HttpGet("ValidaToken")]
+        public async Task<IActionResult> ValidaToken()
+        {
+           return Ok("Token válidado com sucesso!");
+        }
     }
 }
