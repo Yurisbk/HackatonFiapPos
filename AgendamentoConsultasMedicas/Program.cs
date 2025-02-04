@@ -1,5 +1,4 @@
-using Npgsql;
-using System.Data;
+using AgendamentoConsultasMedicas.Configuration;
 
 namespace AgendamentoConsultasMedicas;
 
@@ -9,22 +8,18 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
-        .Build();
-
-        // Add services to the container.
+            .AddJsonFile("appsettings.json")
+            .Build();
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var connectionstring = configuration.GetValue<string>("ConnectionStringPostgres");
-        builder.Services.AddScoped<IDbConnection>((connection) => new NpgsqlConnection(connectionstring));
+        // Configure dependency injection
+        builder.Services.DIConfigure(builder.Configuration);
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -34,7 +29,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

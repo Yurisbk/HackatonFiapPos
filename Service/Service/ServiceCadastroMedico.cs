@@ -6,19 +6,19 @@ namespace Service.Service;
 
 public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico): IServiceCadastroMedico
 {
-    public Medico? ResgatarMedicoPorEmail(string email) => repositorioMedico.ResgatarMedicoPorEmail(email);
+    public async Task<Medico?> ResgatarMedicoPorEmail(string email) => await repositorioMedico.ResgatarMedicoPorEmail(email);
 
-    public void GravarMedico(Medico medico)
+    public async Task GravarMedico(Medico medico)
     {
         ArgumentNullException.ThrowIfNull(medico);
 
         medico.Validar();
 
         if (medico.Id == null)
-            repositorioMedico.RegistarNovoMedico(medico);
+            await repositorioMedico.RegistarNovoMedico(medico);
         else
-            repositorioMedico.AlterarDadosMedico(medico);
+            await repositorioMedico.AlterarDadosMedico(medico);
     }
 
-    public void ExcluirMedico(int id) => repositorioMedico.ExcluirMedico(id);
+    public async Task ExcluirMedico(int id) => await repositorioMedico.ExcluirMedico(id);
 }

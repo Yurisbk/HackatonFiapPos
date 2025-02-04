@@ -4,13 +4,13 @@ using Force.DeepCloner;
 
 namespace Infrastructure.Repository.Memory;
 
-public class RepositoryMemMedico: IRepositoryMedico
+public class RepositoryMemMedico : IRepositoryMedico
 {
-    public Medico? ResgatarMedicoPorId(int id) => MemDB.Medicos.FirstOrDefault(p => p.Id == id)?.DeepClone();
+    public async Task<Medico?> ResgatarMedicoPorId(int id) => await Task.FromResult(MemDB.Medicos.FirstOrDefault(p => p.Id == id)?.DeepClone());
 
-    public Medico? ResgatarMedicoPorEmail(string email) => MemDB.Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone();
+    public async Task<Medico?> ResgatarMedicoPorEmail(string email) => await Task.FromResult(MemDB.Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone());
 
-    public void RegistarNovoMedico(Medico medico)
+    public async Task RegistarNovoMedico(Medico medico)
     {
         ArgumentNullException.ThrowIfNull(medico);
 
@@ -31,15 +31,17 @@ public class RepositoryMemMedico: IRepositoryMedico
         medico.Id = MemDB.CriaChaveUnica(MemDB.Medicos);
 
         MemDB.Medicos.Add(medico.DeepClone());
+
+        await Task.CompletedTask;
     }
 
-    public void AlterarDadosMedico(Medico medico)
+    public async Task AlterarDadosMedico(Medico medico)
     {
         ArgumentNullException.ThrowIfNull(medico);
 
         medico.Validar();
 
-        Medico? medicoCadastro = ResgatarMedicoPorId(medico.Id ?? -1);
+        Medico? medicoCadastro = await ResgatarMedicoPorId(medico.Id ?? -1);
         if (medicoCadastro == null)
             throw new ArgumentException("Médico não encontrado");
 
@@ -55,14 +57,18 @@ public class RepositoryMemMedico: IRepositoryMedico
             throw new ArgumentException("CRM já cadastrado");
 
         MemDB.Medicos[MemDB.Medicos.IndexOf(medicoCadastro)] = medico.DeepClone();
+
+        await Task.CompletedTask;
     }
 
-    public void ExcluirMedico(int id)
+    public async Task ExcluirMedico(int id)
     {
-        Medico? medicoCadastro = ResgatarMedicoPorId(id);
+        Medico? medicoCadastro = await ResgatarMedicoPorId(id);
         if (medicoCadastro == null)
             throw new ArgumentException("Médico não encontrado");
 
         MemDB.Medicos.RemoveAt(MemDB.Medicos.FirstOrDefault(medico => medico.Id == id)?.Id ?? -1);
+
+        await Task.CompletedTask;
     }
 }

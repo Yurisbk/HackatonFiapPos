@@ -6,10 +6,10 @@ namespace Service.Service;
 
 public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico): IServiceHorarioMedico
 {
-    public HorarioMedico[] ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana) =>
-        repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(diaSemana);
+    public async Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana) =>
+        await repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(diaSemana);
 
-    public void RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
+    public async Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
         ArgumentNullException.ThrowIfNull(periodos);
 
@@ -28,6 +28,6 @@ public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositor
         if (medicoCadastro == null)
             throw new ArgumentException("Medico não encontrado.", nameof(idMedico));
 
-        repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(idMedico, diaSemana, periodos);
+        await repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(idMedico, diaSemana, periodos);
     }
 }

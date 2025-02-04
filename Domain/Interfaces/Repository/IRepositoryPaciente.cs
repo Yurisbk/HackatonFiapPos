@@ -4,9 +4,9 @@ namespace Domain.Interfaces.Repository;
 
 public interface IRepositoryPaciente
 {
-    Paciente? ResgatarPacientePorId(int id);
-    Paciente? ResgatarPacientePorEmail(string email);
-    void RegistarNovoPaciente(Paciente paciente);
-    void AlterarDadosPaciente(Paciente paciente);
-    void ExcluirPaciente(int id);
+    Task<Paciente?> ResgatarPacientePorId(int id);
+    Task<Paciente?> ResgatarPacientePorEmail(string email);
+    Task RegistarNovoPaciente(Paciente paciente);
+    Task AlterarDadosPaciente(Paciente paciente);
+    Task ExcluirPaciente(int id);
 }

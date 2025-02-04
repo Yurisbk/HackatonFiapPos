@@ -12,8 +12,7 @@ public class FixtureDI : IDisposable
 
     public FixtureDI()
     {
-        var services = new ServiceCollection();
-        
+        var services = new ServiceCollection();        
         
         services.AddScoped<IRepositoryPaciente, RepositoryMemPaciente>();
         services.AddScoped<IRepositoryMedico, RepositoryMemMedico>();

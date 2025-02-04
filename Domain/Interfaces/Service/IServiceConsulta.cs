@@ -4,6 +4,6 @@ namespace Domain.Interfaces.Service;
 
 public interface IServiceConsulta
 {
-    DTOHorariosLivre[] ListarHorariosLivres(int dias = 15);
-    void RegistrarConsulta(int pacienteId, int medicoId, DateTime horario);
+    Task<DTOHorariosLivre[]> ListarHorariosLivres(int dias = 15);
+    Task RegistrarConsulta(int pacienteId, int medicoId, DateTime horario);
 }

@@ -4,7 +4,7 @@ namespace Domain.Interfaces.Service;
 
 public interface IServiceCadastroMedico
 {
-    void ExcluirMedico(int id);
-    void GravarMedico(Medico medico);
-    Medico? ResgatarMedicoPorEmail(string email);
+    Task ExcluirMedico(int id);
+    Task GravarMedico(Medico medico);
+    Task<Medico?> ResgatarMedicoPorEmail(string email);
 }

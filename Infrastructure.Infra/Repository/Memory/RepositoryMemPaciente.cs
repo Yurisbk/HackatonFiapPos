@@ -6,11 +6,11 @@ using Force.DeepCloner;
 
 public class RepositoryMemPaciente : IRepositoryPaciente
 {
-    public Paciente? ResgatarPacientePorId(int id) => MemDB.Pacientes.FirstOrDefault(p => p.Id == id)?.DeepClone();
+    public async Task<Paciente?> ResgatarPacientePorId(int id) => await Task.FromResult(MemDB.Pacientes.FirstOrDefault(p => p.Id == id)?.DeepClone());
 
-    public Paciente? ResgatarPacientePorEmail(string email) => MemDB.Pacientes.FirstOrDefault(p => p.EMail == email)?.DeepClone();
+    public async Task<Paciente?> ResgatarPacientePorEmail(string email) => await Task.FromResult(MemDB.Pacientes.FirstOrDefault(p => p.EMail == email)?.DeepClone());
 
-    public void RegistarNovoPaciente(Paciente paciente)
+    public async Task RegistarNovoPaciente(Paciente paciente)
     {
         ArgumentNullException.ThrowIfNull(paciente);
 
@@ -27,15 +27,17 @@ public class RepositoryMemPaciente : IRepositoryPaciente
         paciente.Id = MemDB.CriaChaveUnica(MemDB.Pacientes);
 
         MemDB.Pacientes.Add(paciente.DeepClone());
+
+        await Task.CompletedTask;
     }
 
-    public void AlterarDadosPaciente(Paciente paciente)
+    public async Task AlterarDadosPaciente(Paciente paciente)
     {
         ArgumentNullException.ThrowIfNull(paciente);
 
         paciente.Validar();
 
-        Paciente? pacienteCadastro = ResgatarPacientePorId(paciente.Id ?? -1);
+        Paciente? pacienteCadastro = await ResgatarPacientePorId(paciente.Id ?? -1);
         if (pacienteCadastro == null)
             throw new ArgumentException("Paciente não encontrado");
 
@@ -49,9 +51,9 @@ public class RepositoryMemPaciente : IRepositoryPaciente
         MemDB.Pacientes[MemDB.Pacientes.IndexOf(pacienteCadastro)] = paciente.DeepClone();
     }
 
-    public void ExcluirPaciente(int id)
+    public async Task ExcluirPaciente(int id)
     {
-        Paciente? pacienteCadastro = ResgatarPacientePorId(id);
+        Paciente? pacienteCadastro = await ResgatarPacientePorId(id);
         if (pacienteCadastro == null)
             throw new ArgumentException("Paciente não encontrado");
 

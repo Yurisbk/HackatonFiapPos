@@ -63,7 +63,7 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
         }
     }
 
-    public DTOHorariosLivre[] ListarHorariosLivres(int dias = 15)
+    public async Task<DTOHorariosLivre[]> ListarHorariosLivres(int dias = 15)
     {
         AgendasMedicos agendasMedicos = new();
 
@@ -77,7 +77,7 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
         {
             // Armazena horarios medicos da semana
             if (!horariosSemana.ContainsKey(dia.DayOfWeek))
-                horariosSemana[dia.DayOfWeek] = serviceHorarioMedico.ListarHorariosMedicoDiaSemana(dia.DayOfWeek);
+                horariosSemana[dia.DayOfWeek] = await serviceHorarioMedico.ListarHorariosMedicoDiaSemana(dia.DayOfWeek);
 
             var horarios = horariosSemana[dia.DayOfWeek];
 
@@ -92,15 +92,13 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
         }
 
         // Registra consultas marcadas como "ocupado"
-        var consultas = repositoryConsulta.ListarProximasConsultas(dias);
+        var consultas = await repositoryConsulta.ListarProximasConsultas(dias);
         foreach(var consulta in consultas)
             agendasMedicos[consulta.IdMedico, consulta.DataHora] = false;
 
         return agendasMedicos.ListarHorariosLivres();
     }
 
-    public void RegistrarConsulta(int pacienteId, int medicoId, DateTime horario)
-    {
-        repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
-    }
+    public async Task RegistrarConsulta(int pacienteId, int medicoId, DateTime horario) 
+        => await repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
 }

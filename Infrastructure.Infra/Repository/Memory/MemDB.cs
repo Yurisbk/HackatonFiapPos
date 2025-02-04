@@ -1,4 +1,6 @@
 ﻿using Domain.Entity;
+using Domain.Interfaces.Repository;
+using System.Data;
 
 namespace Infrastructure.Repository.Memory;
 
