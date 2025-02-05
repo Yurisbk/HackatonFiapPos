@@ -9,6 +9,6 @@ namespace Domain.Interfaces.Service
 {
     public interface IServiceNotificacao
     {
-        Task EnviaNotificacao(DTONotificacao notificacao);
+        Task EnviaNotificacaoMedico(DTONotificacao notificacao);
     }
 }
