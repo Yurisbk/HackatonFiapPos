@@ -24,7 +24,7 @@ namespace AgendamentoConsultasMedicas.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] DTOLoginPaciente loginRequest)
+        public async Task<IActionResult> Login([FromBody] DTOLoginMedico loginRequest)
         {
             try
             {
@@ -44,11 +44,11 @@ namespace AgendamentoConsultasMedicas.Controllers
 
 
         [HttpPost("cadastrar")]
-        public async Task<IActionResult> Cadastrar([FromBody] DTOCreatePaciente createPaciente)
+        public async Task<IActionResult> Cadastrar([FromBody] DTOCreateMedico createMedico)
         {
             try
             {
-                DTOCreateUsuarioResponse? authResponse = await _serviceCadastroMedico.CriarMedico(createPaciente);
+                DTOCreateUsuarioResponse? authResponse = await _serviceCadastroMedico.CriarMedico(createMedico);
 
                 return Ok(authResponse);
             }

@@ -6,5 +6,5 @@ namespace Service.Service;
 public interface IServiceCadastroUsuario
 {
     Task<DTOAutenticacaoResponse> RealizarLogin(DTOLoginUsuario loginUsuario);
-    Task<DTOCreateUsuarioResponse> CriarUsuario(DTOCreatePaciente createPaciente);
+    Task<DTOCreateUsuarioResponse> CriarUsuario(DTOCreatePessoa createPaciente);
 }

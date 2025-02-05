@@ -20,7 +20,10 @@ public static class ExtensionsProgram
     public static IServiceCollection AddInjecoesDependencias(this IServiceCollection services)
     {
         services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
-        services.AddScoped<IRepositoryPaciente, RepositoryMemPaciente>();
+        services.AddScoped<IRepositoryPaciente, RepositoryMemPaciente>();        
+        services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();
+        services.AddScoped<IRepositoryMedico, RepositoryMemMedico>();
+        services.AddScoped<IServiceCadastroUsuario, ServiceCadastroUsuario>();
         return services;
     }
     public static IServiceCollection AddConfiguracaoAPIAuthenticacao(this IServiceCollection services, IConfiguration configuration)

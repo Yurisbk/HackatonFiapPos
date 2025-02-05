@@ -31,7 +31,7 @@ public class ServiceCadastroUsuario : IServiceCadastroUsuario
         DTOAutenticacaoResponse authResponse = JsonSerializer.Deserialize<DTOAutenticacaoResponse>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         return authResponse;
     }
-    public async Task<DTOCreateUsuarioResponse> CriarUsuario(DTOCreatePaciente createPaciente)
+    public async Task<DTOCreateUsuarioResponse> CriarUsuario(DTOCreatePessoa createPaciente)
     {
         DTOCreateUsuario usuario = new DTOCreateUsuario()
         {
