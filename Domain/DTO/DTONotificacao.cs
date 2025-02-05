@@ -10,10 +10,14 @@ namespace Domain.DTO
     {
         public string? EmailMedico { get; set; }
 
+        public string? EmailPaciente { get; set; }
+
         public string? NomePaciente { get; set; }
 
         public string? NomeMedico { get; set; }
 
         public string? HorarioConsulta { get; set; }
+
+        public bool? Confirmacao { get; set; }
     }
 }

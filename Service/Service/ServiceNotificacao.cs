@@ -21,7 +21,7 @@ namespace Service.Service
             _requestClient = requestClient;
         }
 
-        public async Task EnviaNotificacao(DTONotificacao notificacao)
+        public async Task EnviaNotificacaoMedico(DTONotificacao notificacao)
         {
 
             var nomeFila = "Notificacao";

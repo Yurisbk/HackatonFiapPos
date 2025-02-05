@@ -23,41 +23,100 @@ namespace ConsumerNotificacao.Service
                 throw new ArgumentException("Dados da notificação inválidos!");
 
             string assunto = "Health&Med - Nova consulta agendada";
-            string corpo = GerarConteudoEmail(notificacao);
+            string assuntoNegativa = "Health&Med - Consulta cancelada";
+            string corpoMedico = GerarConteudoEmail(notificacao, "medico");
+            string corpoPaciente = GerarConteudoEmail(notificacao, "paciente");
 
             using (var client = new SmtpClient(_smtpServer, _smtpPort))
             {
                 client.Credentials = new NetworkCredential(_emailRemetente, _senhaEmail);
                 client.EnableSsl = true;
 
-                var mailMessage = new MailMessage
+                var mensagemMedico = new MailMessage
                 {
                     From = new MailAddress(_emailRemetente),
                     Subject = assunto,
-                    Body = corpo,
+                    Body = corpoMedico,
                     IsBodyHtml = true
                 };
 
-                mailMessage.To.Add(notificacao.EmailMedico);
 
-                client.Send(mailMessage);
+                var mensagemPaciente = new MailMessage
+                {
+                    From = new MailAddress(_emailRemetente),
+                    Subject = assunto,
+                    Body = corpoPaciente,
+                    IsBodyHtml = true
+                };
+
+
+                if (notificacao.Confirmacao is true) 
+                {
+                    mensagemMedico.To.Add(notificacao.EmailMedico);
+                    mensagemPaciente.To.Add(notificacao.EmailPaciente);
+                    client.Send(mensagemMedico);
+                    client.Send(mensagemPaciente);
+                }
+
+                if (notificacao.Confirmacao is false)
+                {
+                    mensagemPaciente.Subject = assuntoNegativa;
+                    mensagemPaciente.To.Add(notificacao.EmailPaciente);
+                    client.Send(mensagemPaciente);
+                }
+
             }
         }
 
-        private string GerarConteudoEmail(DTONotificacao notificacao)
+        private string GerarConteudoEmail(DTONotificacao notificacao, string pessoa)
         {
-            string linkAgenda = GerarLinkAgenda(notificacao);
+            if (notificacao.Confirmacao is true && pessoa == "medico")
+            {
+                string linkAgenda = GerarLinkAgenda(notificacao);
 
-            return $@"
-            <html>
-            <body>
-                <h2>Olá, Dr. {notificacao.NomeMedico}!</h2>
-                <p>Você tem uma nova consulta marcada!</p>
-                <p><strong>Paciente:</strong> {notificacao.NomePaciente}</p>
-                <p><strong>Data e horário:</strong> {notificacao.HorarioConsulta}</p>
-                <p><a href='{linkAgenda}' target='_blank'>Clique aqui para adicionar à sua agenda</a></p>
-            </body>
-            </html>";
+                return $@"
+                <html>
+                <body>
+                    <h2>Olá, Dr. {notificacao.NomeMedico}!</h2>
+                    <p>Você tem uma nova consulta marcada!</p>
+                    <p><strong>Paciente:</strong> {notificacao.NomePaciente}</p>
+                    <p><strong>Data e horário:</strong> {notificacao.HorarioConsulta}</p>
+                    <p><a href='{linkAgenda}' target='_blank'>Clique aqui para adicionar à sua agenda</a></p>
+                </body>
+                </html>";
+            }
+
+            if (notificacao.Confirmacao is true && pessoa == "paciente")
+            {
+                string linkAgenda = GerarLinkAgenda(notificacao);
+
+                return $@"
+                <html>
+                <body>
+                    <h2>Olá, {notificacao.NomePaciente}.</h2>
+                    <p>Sua consulta foi marcada com sucesso!</p>
+                    <p><strong>Medico:</strong> {notificacao.NomeMedico}</p>
+                    <p><strong>Data e horário:</strong> {notificacao.HorarioConsulta}</p>
+                    <p><a href='{linkAgenda}' target='_blank'>Clique aqui para adicionar à sua agenda</a></p>
+                </body>
+                </html>";
+            }
+
+            if (notificacao.Confirmacao is false && pessoa == "paciente")
+            { 
+                return $@"
+                <html>
+                <body>
+                    <h2>Olá, {notificacao.NomePaciente}.</h2>
+                    <p>Sua consulta não foi marcada. Sentimos muito.</p>
+                    <p><strong>Por favor, escolha outro horario e tente novamente.</p>
+                    <p><strong>Obrigado.</p>
+                </body>
+                </html>";
+            }
+
+            return string.Empty;
+
         }
 
 
