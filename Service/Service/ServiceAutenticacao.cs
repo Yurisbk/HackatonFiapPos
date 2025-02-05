@@ -24,7 +24,7 @@ public class ServiceAutenticacao : IServiceAuthenticacao
         _jwtTokenService = jwtTokenService;
     }
 
-    public async Task<IdentityResult> Register(DTOCreateUsuario request)
+    public async Task<DTOCreateUsuarioResponse> Register(DTOCreateUsuario request)
     {
         var user = new Usuario
         {
@@ -34,11 +34,12 @@ public class ServiceAutenticacao : IServiceAuthenticacao
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
+        if (!result.Succeeded) throw new Exception(result.Errors.ToString());
+        
         var roles = Enum.GetValues<UserRoles>().Select(e => e.ToString()).ToList();
         await _userManager.AddToRolesAsync(user, roles);
-
-
-        return result;
+        
+        return new DTOCreateUsuarioResponse() { Auth_Id = user.Id };
     }
     private async Task<bool> SaveTokenAsync(Usuario user, string token)
     {

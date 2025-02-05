@@ -1,9 +1,12 @@
 ﻿using Domain.DTO;
+using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
 using Infrastructure.DataAutenticador;
+using Infrastructure.Repository.Memory;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Service;
@@ -16,7 +19,19 @@ public static class ExtensionsProgram
 {
     public static IServiceCollection AddInjecoesDependencias(this IServiceCollection services)
     {
+        services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
+        services.AddScoped<IRepositoryPaciente, RepositoryMemPaciente>();
+        return services;
+    }
+    public static IServiceCollection AddConfiguracaoAPIAuthenticacao(this IServiceCollection services, IConfiguration configuration)
+    {
 
+        var apiAutenticacao = configuration.GetValue<string>("APIAutenticacao");
+        services.AddHttpClient("AutenticacaoAPI", client =>
+        {
+            client.BaseAddress = new Uri(apiAutenticacao);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
         return services;
     }
     public static IServiceCollection AddDocumentacaoSwagger(this IServiceCollection services)
@@ -59,7 +74,7 @@ public static class ExtensionsProgram
     public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AutenticacaoDbContext>(options =>
-             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection")));
+             options.UseNpgsql(configuration.GetConnectionString("APIAutenticacao")));
 
         return services;
     }

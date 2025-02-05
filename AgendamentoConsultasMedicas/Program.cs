@@ -17,13 +17,14 @@ public class Program
         var configuration = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .Build();
-
+        builder.Services.AddInjecoesDependencias();
+        builder.Services.AddConfiguracaoAPIAuthenticacao(configuration);
         builder.Services.AddIdentityConfiguration(configuration);
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddDocumentacaoSwagger();
 
-        var connectionstring = configuration.GetValue<string>("ConnectionStringPostgres");
+        var connectionstring = configuration.GetValue<string>("APIAutenticacao");
         builder.Services.AddScoped<IDbConnection>((connection) => new NpgsqlConnection(connectionstring));
 
         //adiciona masstransit

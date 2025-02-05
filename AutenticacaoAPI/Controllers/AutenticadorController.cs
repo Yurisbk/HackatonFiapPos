@@ -29,13 +29,9 @@ namespace AuthServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _authentication.Register(request);
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
+            var result = await _authentication.Register(request);           
 
-            return Ok("Paciente registrado com sucesso!");
+            return Ok(result);
         }
 
         [HttpPost("login")]
