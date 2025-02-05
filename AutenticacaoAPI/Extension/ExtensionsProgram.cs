@@ -25,7 +25,7 @@ public static class ExtensionsProgram
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tech Challenge API" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthServer API" });
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
