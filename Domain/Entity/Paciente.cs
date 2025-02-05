@@ -1,6 +1,6 @@
 ﻿namespace Domain.DTO;
 
-public class Paciente : Usuario
+public class Paciente : Pessoa
 {
 
 }

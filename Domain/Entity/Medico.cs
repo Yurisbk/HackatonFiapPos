@@ -1,6 +1,6 @@
 ﻿namespace Domain.DTO;
 
-public class Medico : Usuario
+public class Medico : Pessoa
 {
     public string? CRM;
 
