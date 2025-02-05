@@ -18,4 +18,10 @@ public static class MemDB
 
         return lista.Max(e => e.Id ?? 0) + 1;
     }
+
+    static public void SimulaUK<T>(List<T> lista, Func<T, T, bool> condicao, T entidade, string mensagem) where T: Entidade
+    {
+        if (lista.Any(t => condicao(t, entidade)))
+            throw new InvalidOperationException(mensagem);
+    }
 }

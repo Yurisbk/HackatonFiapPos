@@ -15,7 +15,7 @@ public class Entidade
         StringBuilder stringBuilder = new StringBuilder();
         foreach (FieldInfo field in fields)
         {
-            stringBuilder.Append($"{field.Name}: {field.GetValue(this)} ");
+            stringBuilder.Append($"{field.Name}: {field.GetValue(this)}; ");
         }
 
         return stringBuilder.ToString();

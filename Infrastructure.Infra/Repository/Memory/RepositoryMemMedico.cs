@@ -16,16 +16,9 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        // Simula UKs
-
-        if (MemDB.Medicos.Any(m => m.CPF == medico.CPF))
-            throw new ArgumentException("CPF já cadastrado");
-
-        if (MemDB.Medicos.Any(m => m.EMail == medico.EMail))
-            throw new ArgumentException("Email já cadastrado");
-
-        if (MemDB.Medicos.Any(m => m.CRM == medico.CRM))
-            throw new ArgumentException("Email já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CPF == b.CPF, medico, "CPF já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.EMail == b.EMail, medico, "Email já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CRM == b.CRM, medico, "CRM já cadastrado");
 
         // Simula PK
         medico.Id = MemDB.CriaChaveUnica(MemDB.Medicos);
@@ -41,20 +34,13 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        Medico? medicoCadastro = await ResgatarMedicoPorId(medico.Id ?? -1);
+        Medico? medicoCadastro = MemDB.Medicos.FirstOrDefault(p => p.Id == medico.Id);
         if (medicoCadastro == null)
             throw new ArgumentException("Médico não encontrado");
 
-        // Simula UKs
-
-        if (MemDB.Medicos.FirstOrDefault(m => m.CPF == medico.CPF) != medicoCadastro)
-            throw new ArgumentException("CPF já cadastrado");
-
-        if (MemDB.Medicos.FirstOrDefault(m => m.EMail == medico.EMail) != medicoCadastro)
-            throw new ArgumentException("Email já cadastrado");
-
-        if (MemDB.Medicos.FirstOrDefault(m => m.CRM == medico.CRM) != medicoCadastro)
-            throw new ArgumentException("CRM já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CPF == b.CPF && a.Id != b.Id, medico, "CPF já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.EMail == b.EMail && a.Id != b.Id, medico, "Email já cadastrado");
+        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CRM == b.CRM && a.Id != b.Id, medico, "CRM já cadastrado");
 
         MemDB.Medicos[MemDB.Medicos.IndexOf(medicoCadastro)] = medico.DeepClone();
 
