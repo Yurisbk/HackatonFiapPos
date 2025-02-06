@@ -16,12 +16,11 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CPF == b.CPF, medico, "CPF já cadastrado");
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.EMail == b.EMail, medico, "Email já cadastrado");
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CRM == b.CRM, medico, "CRM já cadastrado");
+        MemDB.Medicos.UK(m => m.CPF == medico.CPF, "CPF já cadastrado");
+        MemDB.Medicos.UK(m => m.EMail == medico.EMail, "Email já cadastrado");
+        MemDB.Medicos.UK(m => m.CRM == medico.CRM, "CRM já cadastrado");
 
-        // Simula PK
-        medico.Id = MemDB.CriaChaveUnica(MemDB.Medicos);
+        MemDB.Medicos.PK(medico);
 
         MemDB.Medicos.Add(medico.DeepClone());
 
@@ -34,26 +33,22 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        Medico? medicoCadastro = MemDB.Medicos.FirstOrDefault(p => p.Id == medico.Id);
-        if (medicoCadastro == null)
-            throw new ArgumentException("Médico não encontrado");
+        MemDB.Medicos.FK(medico.Id, "Médico não encontrado");
 
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CPF == b.CPF && a.Id != b.Id, medico, "CPF já cadastrado");
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.EMail == b.EMail && a.Id != b.Id, medico, "Email já cadastrado");
-        MemDB.SimulaUK(MemDB.Medicos, (a, b) => a.CRM == b.CRM && a.Id != b.Id, medico, "CRM já cadastrado");
+        MemDB.Medicos.UK(m => m.CPF == medico.CPF && m.Id != medico.Id, "CPF já cadastrado");
+        MemDB.Medicos.UK(m => m.EMail == medico.EMail && m.Id != medico.Id, "Email já cadastrado");
+        MemDB.Medicos.UK(m => m.CRM == medico.CRM && m.Id != medico.Id, "CRM já cadastrado");
 
-        MemDB.Medicos[MemDB.Medicos.IndexOf(medicoCadastro)] = medico.DeepClone();
+        MemDB.Medicos[MemDB.Medicos.IndexOfEntity(medico)] = medico.DeepClone();
 
         await Task.CompletedTask;
     }
 
     public async Task ExcluirMedico(int id)
     {
-        Medico? medicoCadastro = await ResgatarMedicoPorId(id);
-        if (medicoCadastro == null)
-            throw new ArgumentException("Médico não encontrado");
+        MemDB.Medicos.FK(id, "Médico não encontrado");
 
-        MemDB.Medicos.RemoveAt(MemDB.Medicos.FirstOrDefault(medico => medico.Id == id)?.Id ?? -1);
+        MemDB.Medicos.RemoveAt(MemDB.Medicos.IndexOfId(id));
 
         await Task.CompletedTask;
     }

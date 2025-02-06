@@ -9,19 +9,12 @@ public class RepositoryMemConsulta : IRepositoryConsulta
     {
         ArgumentNullException.ThrowIfNull(consulta);
 
-        // Simula UK
-        if (MemDB.Consultas.Any(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora))
-            throw new InvalidOperationException("Medico ja tem consulta marcada neste horário.");
+        MemDB.Consultas.UK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora, "Medico ja tem consulta marcada neste horário.");
 
-        // Simula FK
-        if (!MemDB.Medicos.Any(m => m.Id == consulta.IdMedico))
-            throw new InvalidOperationException("Medico não encontrado.");
+        MemDB.Medicos.FK(consulta.IdMedico, "Medico não encontrado.");
+        MemDB.Pacientes.FK(consulta.IdPaciente, "Paciente não encontrado.");
 
-        if (!MemDB.Pacientes.Any(p => p.Id == consulta.IdPaciente))
-            throw new InvalidOperationException("Paciente não encontrado.");
-
-        // Simula PK
-        consulta.Id = MemDB.CriaChaveUnica(MemDB.Consultas);
+        MemDB.Consultas.PK(consulta);
 
         MemDB.Consultas.Add(consulta);            
 

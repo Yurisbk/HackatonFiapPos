@@ -9,9 +9,7 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
     {
         ArgumentNullException.ThrowIfNull(periodos);
 
-        // Simula FK
-        if (!MemDB.Medicos.Any(m => m.Id == idMedico))
-            throw new InvalidOperationException("Medico não encontrado.");
+        MemDB.Medicos.FK(idMedico, "Medico não encontrado.");
 
         if (periodos.Length == 0)
             throw new ArgumentException("Deve ser informado ao menos um periodo.");
@@ -24,7 +22,7 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
 
         // Adiciona horarios para os periodos
         foreach (var periodo in periodos)
-            MemDB.HorariosMedicos.Add(new HorarioMedico() { Id = MemDB.CriaChaveUnica(MemDB.HorariosMedicos), IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo });
+            MemDB.HorariosMedicos.Add(new HorarioMedico() { Id = MemDB.PK(MemDB.HorariosMedicos), IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo });
 
         await Task.CompletedTask;
     }
