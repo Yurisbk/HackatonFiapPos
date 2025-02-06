@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace contatos_testes_integration.fixture;
+namespace Tests.Integration.Fixture;
 
 public class WebAppFixture
 {
