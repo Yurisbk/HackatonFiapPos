@@ -1,0 +1,117 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 0,
+    "panels": [
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "postgres_active_connections",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Active Connections",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "postgres_queries_per_second",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Queries per Second",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 0, "y": 9 },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "postgres_cache_hit_percentage",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Cache Hit Percentage",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 12, "y": 9 },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "postgres_transactions_commit_rate",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Commit Rate",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 0, "y": 18 },
+        "id": 5,
+        "targets": [
+          {
+            "expr": "postgres_transactions_rollback_rate",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Rollback Rate",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 12, "y": 18 },
+        "id": 6,
+        "targets": [
+          {
+            "expr": "postgres_deadlocks_rate",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "PostgreSQL Deadlocks Rate",
+        "type": "timeseries"
+      }
+    ],
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [ "postgres" ],
+    "templating": { "list": [] },
+    "time": { "from": "now-1h", "to": "now" },
+    "title": "PostgreSQL Monitoring Dashboard",
+    "uid": "postgres-dashboard",
+    "version": 1
+  }
+  

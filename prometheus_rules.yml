@@ -19,7 +19,7 @@ groups:
 
   - name: postgres_rules
     rules:
-      # Número de conexões ativas
+       # Número de conexões ativas no PostgreSQL
       - record: postgres_active_connections
         expr: pg_stat_activity_count
 
@@ -30,6 +30,18 @@ groups:
       # Taxa de acerto do cache em porcentagem
       - record: postgres_cache_hit_percentage
         expr: (pg_stat_database_blks_hit) / (pg_stat_database_blks_hit + pg_stat_database_blks_read) * 100
+
+      # Taxa de commits de transações por segundo
+      - record: postgres_transactions_commit_rate
+        expr: rate(pg_stat_database_xact_commit[1m])
+
+      # Taxa de rollbacks de transações por segundo
+      - record: postgres_transactions_rollback_rate
+        expr: rate(pg_stat_database_xact_rollback[1m])
+
+      # Taxa de deadlocks por segundo
+      - record: postgres_deadlocks_rate
+        expr: rate(pg_stat_database_deadlocks[1m])
 
   - name: api_rules
     rules:

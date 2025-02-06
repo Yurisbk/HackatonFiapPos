@@ -1,0 +1,89 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 0,
+    "panels": [
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "rabbitmq_queue_messages_total",
+            "format": "time_series",
+            "intervalFactor": 2,
+            "legendFormat": "{{queue}}",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ Queue Messages Total",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "rabbitmq_memory_used_mb",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ Memory Used (MB)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 0, "y": 9 },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "rabbitmq_cpu_usage_rate",
+            "format": "time_series",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ CPU Usage Rate",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": { "h": 9, "w": 12, "x": 12, "y": 9 },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "rabbitmq_publish_latency_avg",
+            "format": "time_series",
+            "legendFormat": "{{queue}}",
+            "refId": "A"
+          }
+        ],
+        "title": "RabbitMQ Publish Latency Avg",
+        "type": "timeseries"
+      }
+    ],
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [ "rabbitmq" ],
+    "templating": { "list": [] },
+    "time": { "from": "now-1h", "to": "now" },
+    "title": "RabbitMQ Monitoring Dashboard",
+    "uid": "rabbitmq-dashboard",
+    "version": 1
+  }
+  
