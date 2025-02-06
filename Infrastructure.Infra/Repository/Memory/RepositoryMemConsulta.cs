@@ -9,14 +9,12 @@ public class RepositoryMemConsulta : IRepositoryConsulta
     {
         ArgumentNullException.ThrowIfNull(consulta);
 
-        MemDB.Consultas.UK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora, "Medico ja tem consulta marcada neste horário.");
+        MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora, "Medico ja tem consulta marcada neste horário.");
 
-        MemDB.Medicos.FK(consulta.IdMedico, "Medico não encontrado.");
-        MemDB.Pacientes.FK(consulta.IdPaciente, "Paciente não encontrado.");
+        MemDB.Medicos.CheckFK(consulta.IdMedico, "Medico não encontrado.");
+        MemDB.Pacientes.CheckFK(consulta.IdPaciente, "Paciente não encontrado.");
 
-        MemDB.Consultas.PK(consulta);
-
-        MemDB.Consultas.Add(consulta);            
+        MemDB.Consultas.Insert(consulta);         
 
         await Task.CompletedTask;
     }

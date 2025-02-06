@@ -3,6 +3,7 @@ using Domain.Interfaces.Service;
 using Infrastructure.Repository.DB;
 using Infrastructure.Repository.Memory;
 using Npgsql;
+using Service.Helper;
 using Service.Service;
 using System.Data;
 
@@ -27,6 +28,7 @@ public static class DIConfiguration
         }
 
         services.AddScoped<ITransacao, DBTransacao>();
+        services.AddSingleton<HelperTransacao>();
 
         services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
         services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();

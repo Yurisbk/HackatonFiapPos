@@ -1,6 +1,7 @@
 ﻿using contatos_testes_integration.fixture;
 using Domain.Interfaces.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using Service.Helper;
 using Tests.Integration.Helper;
 
 namespace Tests.Integration.Infrastructure;
@@ -8,11 +9,12 @@ namespace Tests.Integration.Infrastructure;
 public class TestRepositoryMedico(WebAppFixture webAppFixture) : TestBaseWebApp(webAppFixture)
 {
     IRepositoryMedico repositoryMedico => ServiceProvider.GetService<IRepositoryMedico>()!;
+    HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!;
 
     [Fact]
     public async Task TestCadastroMedico()
     {
-        using (var transacao = CriaTransacao())
+        using (var transacao = helperTransacao.CriaTransacao())
         {
             // Testa registro
 

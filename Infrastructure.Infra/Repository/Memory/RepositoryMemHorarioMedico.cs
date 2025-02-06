@@ -9,7 +9,7 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
     {
         ArgumentNullException.ThrowIfNull(periodos);
 
-        MemDB.Medicos.FK(idMedico, "Medico não encontrado.");
+        MemDB.Medicos.CheckFK(idMedico, "Medico não encontrado.");
 
         if (periodos.Length == 0)
             throw new ArgumentException("Deve ser informado ao menos um periodo.");
@@ -17,12 +17,17 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
         foreach (var periodo in periodos)
             periodo.Validar();
 
+        // Checa conflitos de horario
+        var conflito = Periodo.ChecaConflitos(periodos);
+        if (conflito != null)
+            throw new ArgumentException($"Conflito de horario: {conflito.Value.periodo1} - {conflito.Value.periodo2}.");
+
         // Exclui todos os horarios do dia da semana do medico
         MemDB.HorariosMedicos.RemoveAll(h => h.IdMedico == idMedico && h.DiaSemana == diaSemana);
 
         // Adiciona horarios para os periodos
         foreach (var periodo in periodos)
-            MemDB.HorariosMedicos.Add(new HorarioMedico() { Id = MemDB.PK(MemDB.HorariosMedicos), IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo });
+            MemDB.HorariosMedicos.Insert(new HorarioMedico() { IdMedico = idMedico, DiaSemana = diaSemana, Periodo = periodo });
 
         await Task.CompletedTask;
     }
@@ -30,9 +35,9 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
     public async Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana)
     {
         return await Task.FromResult(MemDB.HorariosMedicos
-        .Where(horario => horario.DiaSemana == diaSemana)
-        .OrderBy(horario => horario.IdMedico)
-        .ThenBy(horario => horario.Periodo.HoraInicial)
-        .ToArray());
+            .Where(horario => horario.DiaSemana == diaSemana)
+            .OrderBy(horario => horario.IdMedico)
+            .ThenBy(horario => horario.Periodo.HoraInicial)
+            .ToArray());
     }
 }

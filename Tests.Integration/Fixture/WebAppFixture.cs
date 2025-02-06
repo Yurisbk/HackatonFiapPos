@@ -26,6 +26,4 @@ public class TestBaseWebApp(WebAppFixture webAppFixture) : IClassFixture<WebAppF
     protected HttpClient HttpClient => webAppFixture.TestHtppClient;
     protected IServiceProvider ServiceProvider => webAppFixture.ServiceProvider;
     protected IConfiguration Configuration => webAppFixture.Configuration;
-
-    protected ITransacao CriaTransacao() => ServiceProvider.GetRequiredService<ITransacao>();
 }

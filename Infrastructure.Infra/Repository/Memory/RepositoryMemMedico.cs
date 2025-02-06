@@ -16,13 +16,11 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        MemDB.Medicos.UK(m => m.CPF == medico.CPF, "CPF já cadastrado");
-        MemDB.Medicos.UK(m => m.EMail == medico.EMail, "Email já cadastrado");
-        MemDB.Medicos.UK(m => m.CRM == medico.CRM, "CRM já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.CPF == medico.CPF, "CPF já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.EMail == medico.EMail, "Email já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.CRM == medico.CRM, "CRM já cadastrado");
 
-        MemDB.Medicos.PK(medico);
-
-        MemDB.Medicos.Add(medico.DeepClone());
+        MemDB.Medicos.Insert(medico);
 
         await Task.CompletedTask;
     }
@@ -33,22 +31,22 @@ public class RepositoryMemMedico : IRepositoryMedico
 
         medico.Validar();
 
-        MemDB.Medicos.FK(medico.Id, "Médico não encontrado");
+        MemDB.Medicos.CheckFK(medico.Id, "Médico não encontrado");
 
-        MemDB.Medicos.UK(m => m.CPF == medico.CPF && m.Id != medico.Id, "CPF já cadastrado");
-        MemDB.Medicos.UK(m => m.EMail == medico.EMail && m.Id != medico.Id, "Email já cadastrado");
-        MemDB.Medicos.UK(m => m.CRM == medico.CRM && m.Id != medico.Id, "CRM já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.CPF == medico.CPF && m.Id != medico.Id, "CPF já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.EMail == medico.EMail && m.Id != medico.Id, "Email já cadastrado");
+        MemDB.Medicos.CheckUK(m => m.CRM == medico.CRM && m.Id != medico.Id, "CRM já cadastrado");
 
-        MemDB.Medicos[MemDB.Medicos.IndexOfEntity(medico)] = medico.DeepClone();
+        MemDB.Medicos.Update(medico);
 
         await Task.CompletedTask;
     }
 
     public async Task ExcluirMedico(int id)
     {
-        MemDB.Medicos.FK(id, "Médico não encontrado");
+        MemDB.Medicos.CheckFK(id, "Médico não encontrado");
 
-        MemDB.Medicos.RemoveAt(MemDB.Medicos.IndexOfId(id));
+        MemDB.Medicos.Delete(id);
 
         await Task.CompletedTask;
     }

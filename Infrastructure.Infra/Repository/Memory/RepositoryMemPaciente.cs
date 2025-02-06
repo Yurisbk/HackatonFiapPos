@@ -16,12 +16,10 @@ public class RepositoryMemPaciente : IRepositoryPaciente
 
         paciente.Validar();
 
-        MemDB.Pacientes.UK(p => p.CPF == paciente.CPF, "CPF já cadastrado");
-        MemDB.Pacientes.UK(p => p.EMail == paciente.EMail, "Email já cadastrado");
+        MemDB.Pacientes.CheckUK(p => p.CPF == paciente.CPF, "CPF já cadastrado");
+        MemDB.Pacientes.CheckUK(p => p.EMail == paciente.EMail, "Email já cadastrado");
 
-        MemDB.Pacientes.PK(paciente);
-
-        MemDB.Pacientes.Add(paciente.DeepClone());
+        MemDB.Pacientes.Insert(paciente);
 
         await Task.CompletedTask;
     }
@@ -32,20 +30,22 @@ public class RepositoryMemPaciente : IRepositoryPaciente
 
         paciente.Validar();
 
-        MemDB.Pacientes.FK(paciente.Id, "Paciente não encontrado");
+        MemDB.Pacientes.CheckFK(paciente.Id, "Paciente não encontrado");
 
-        MemDB.Pacientes.UK(p => p.CPF == paciente.CPF && p.Id != paciente.Id, "CPF já cadastrado");
-        MemDB.Pacientes.UK(p => p.EMail == paciente.EMail && p.Id != paciente.Id, "Email já cadastrado");
+        MemDB.Pacientes.CheckUK(p => p.CPF == paciente.CPF && p.Id != paciente.Id, "CPF já cadastrado");
+        MemDB.Pacientes.CheckUK(p => p.EMail == paciente.EMail && p.Id != paciente.Id, "Email já cadastrado");
 
-        MemDB.Pacientes[MemDB.Pacientes.IndexOfEntity(paciente)] = paciente.DeepClone();
+        MemDB.Pacientes.Update(paciente);
 
         await Task.CompletedTask;
     }
 
     public async Task ExcluirPaciente(int id)
     {
-        MemDB.Pacientes.FK(id, "Paciente não encontrado");
+        MemDB.Pacientes.CheckFK(id, "Paciente não encontrado");
 
-        MemDB.Pacientes.RemoveAt(MemDB.Pacientes.IndexOfId(id));
+        MemDB.Pacientes.Delete(id);
+
+        await Task.CompletedTask;
     }
 }
