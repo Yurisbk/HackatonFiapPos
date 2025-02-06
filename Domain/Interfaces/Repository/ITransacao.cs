@@ -2,5 +2,5 @@
 
 public interface ITransacao: IDisposable
 {
-    void Commit();
+    void Gravar();
 }

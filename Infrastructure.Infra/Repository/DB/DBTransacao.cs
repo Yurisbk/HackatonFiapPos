@@ -10,7 +10,7 @@ public class DBTransacao : ITransacao
     public DBTransacao(IDbConnection? dbConnection) 
         => dbTransaction = dbConnection?.BeginTransaction();
 
-    public void Commit() 
+    public void Gravar() 
         => dbTransaction?.Commit();
 
     public void Dispose()

@@ -1,33 +1,37 @@
 ﻿using Domain.Entity;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
+using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico): IServiceHorarioMedico
+public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico, HelperTransacao helperTransacao) : IServiceHorarioMedico
 {
     public async Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana) =>
         await repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(diaSemana);
 
     public async Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
-        ArgumentNullException.ThrowIfNull(periodos);
+        using (var transcao = helperTransacao.CriaTransacao())
+        {
+            ArgumentNullException.ThrowIfNull(periodos);
 
-        if (periodos.Length == 0)
-            throw new ArgumentException("Deve ser informado ao menos um periodo.");
+            if (periodos.Length == 0)
+                throw new ArgumentException("Deve ser informado ao menos um periodo.");
 
-        foreach (var periodo in periodos)
-            periodo.Validar();
+            foreach (var periodo in periodos)
+                periodo.Validar();
 
-        // Checa conflitos de horario
-        var conflito = Periodo.ChecaConflitos(periodos);
-        if (conflito != null)
-            throw new ArgumentException($"Conflito de horario: {conflito.Value.periodo1} - {conflito.Value.periodo2}.");
+            // Checa conflitos de horario
+            var conflito = Periodo.ChecaConflitos(periodos);
+            if (conflito != null)
+                throw new ArgumentException($"Conflito de horario: {conflito.Value.periodo1} - {conflito.Value.periodo2}.");
 
-        var medicoCadastro = repositoryMedico.ResgatarMedicoPorId(idMedico);
-        if (medicoCadastro == null)
-            throw new ArgumentException("Medico não encontrado.", nameof(idMedico));
+            var medicoCadastro = repositoryMedico.ResgatarMedicoPorId(idMedico);
+            if (medicoCadastro == null)
+                throw new ArgumentException("Medico não encontrado.", nameof(idMedico));
 
-        await repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(idMedico, diaSemana, periodos);
+            await repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(idMedico, diaSemana, periodos);
+        }
     }
 }

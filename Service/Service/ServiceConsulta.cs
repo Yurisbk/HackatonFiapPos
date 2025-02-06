@@ -2,10 +2,11 @@
 using Domain.Entity;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
+using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IRepositoryConsulta repositoryConsulta): IServiceConsulta
+public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IRepositoryConsulta repositoryConsulta, HelperTransacao helperTransacao): IServiceConsulta
 {
     public class AgendasMedicos
     {
@@ -67,7 +68,7 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
     {
         AgendasMedicos agendasMedicos = new();
 
-        Dictionary<DayOfWeek, HorarioMedico[]> horariosSemana = new();        
+        Dictionary<DayOfWeek, HorarioMedico[]> horariosSemana = new();
 
         List<DTOHorariosLivre> horariosLivres = new();
 
@@ -93,12 +94,15 @@ public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IReposi
 
         // Registra consultas marcadas como "ocupado"
         var consultas = await repositoryConsulta.ListarProximasConsultas(dias);
-        foreach(var consulta in consultas)
+        foreach (var consulta in consultas)
             agendasMedicos[consulta.IdMedico, consulta.DataHora] = false;
 
         return agendasMedicos.ListarHorariosLivres();
     }
 
-    public async Task RegistrarConsulta(int pacienteId, int medicoId, DateTime horario) 
-        => await repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
+    public async Task RegistrarConsulta(int pacienteId, int medicoId, DateTime horario)
+    {
+        using (var transacao = helperTransacao.CriaTransacao())
+            await repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
+    }
 }
