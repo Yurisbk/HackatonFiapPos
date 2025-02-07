@@ -29,6 +29,10 @@ public class ServiceCadastroPaciente(IRepositoryPaciente repositorioPaciente, He
     public async Task ExcluirPaciente(int id)
     {
         using (var transacao = helperTransacao.CriaTransacao())
+        {
             await repositorioPaciente.ExcluirPaciente(id);
+
+            transacao.Gravar();
+        }
     }
 }

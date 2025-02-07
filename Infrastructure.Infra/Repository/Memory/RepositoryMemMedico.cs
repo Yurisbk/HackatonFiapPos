@@ -90,4 +90,30 @@ public class RepositoryMemMedico : IRepositoryMedico
             MemDB.DBLock.Release();
         }
     }
+
+    public async Task<string[]> ListarEspecialidadesMedicas()
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            return MemDB.Medicos.Select(medico => medico.Especialidade!).Distinct().OrderBy(e => e).ToArray();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
+    public async Task<Medico[]> ListarMedicosPorEspecialidade(string especialidade)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            return MemDB.Medicos.Where(medico => medico.Especialidade == especialidade).ToArray();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
 }

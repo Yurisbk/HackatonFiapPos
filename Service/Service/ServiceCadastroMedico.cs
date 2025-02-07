@@ -5,7 +5,7 @@ using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, HelperTransacao helperTransacao): IServiceCadastroMedico
+public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IServiceHorarioMedico serviceHorarioMedico, HelperTransacao helperTransacao): IServiceCadastroMedico
 {
     public async Task<Medico?> ResgatarMedicoPorEmail(string email) => await repositorioMedico.ResgatarMedicoPorEmail(email);
 
@@ -27,6 +27,26 @@ public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, HelperTr
     public async Task ExcluirMedico(int id)
     {
         using (var transacao = helperTransacao.CriaTransacao())
+        {
             await repositorioMedico.ExcluirMedico(id);
+
+            transacao.Gravar();
+        }
     }
+
+    public async Task<string[]> ListarEspecialidadeMedicas() 
+        => await repositorioMedico.ListarEspecialidadesMedicas();
+
+    public async Task<Medico[]> ListarMedicos(string especialidade, DayOfWeek? atendeDiaSemana)
+    {
+        var medicos = await repositorioMedico.ListarMedicosPorEspecialidade(especialidade);
+
+        if (atendeDiaSemana != null)
+        {
+            var horarios = await serviceHorarioMedico.ListarHorariosMedicoDiaSemana(atendeDiaSemana.Value);
+            medicos = medicos.Where(m => horarios.Any(h => h.IdMedico == m.Id)).ToArray();
+        }
+
+        return medicos;
+    }        
 }
