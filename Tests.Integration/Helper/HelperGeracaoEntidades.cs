@@ -4,7 +4,8 @@ namespace Tests.Integration.Helper;
 
 public class HelperGeracaoEntidades()
 {
-    static int counter;
+    static int counter = 1;
+    static object counterLock = new object();
 
     static public string GerarCpf()
     {
@@ -49,12 +50,21 @@ public class HelperGeracaoEntidades()
         return $"{numero}{letra}";
     }
 
-    static public Paciente CriaPacienteValido() => new Paciente() { Nome = $"Paciente {++counter}", CPF = GerarCpf(), EMail = $"paciente{counter}@teste.com" };
+    static public Paciente CriaPacienteValido()
+    {
+        lock (counterLock)
+        {
+            return new Paciente() { Nome = $"Paciente {++counter}", CPF = GerarCpf(), EMail = $"paciente{counter}@teste.com" };
+        }
+    }
 
     static public Medico CriaMedicoValido()
     {
-        string especialidade = EspecialidadesMedicas[new Random().Next(0, EspecialidadesMedicas.Length)];
-        return new Medico() { Nome = $"Medico {++counter}", CPF = GerarCpf(), EMail = $"medico{counter}@teste.com", Especialidade = especialidade, CRM = GerarCrm() };
+        lock (counterLock)
+        {
+            string especialidade = EspecialidadesMedicas[new Random().Next(0, EspecialidadesMedicas.Length)];
+            return new Medico() { Nome = $"Medico {++counter}", CPF = GerarCpf(), EMail = $"medico{counter}@teste.com", Especialidade = especialidade, CRM = GerarCrm() };
+        }
     }
 
     static public string[] EspecialidadesMedicas =

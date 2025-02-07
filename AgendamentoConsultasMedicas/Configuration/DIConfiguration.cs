@@ -28,7 +28,7 @@ public static class DIConfiguration
         }
 
         services.AddScoped<ITransacao, DBTransacao>();
-        services.AddSingleton<HelperTransacao>();
+        services.AddScoped<HelperTransacao>();
 
         services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
         services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();

@@ -5,5 +5,5 @@ namespace Service.Helper;
 
 public class HelperTransacao(IServiceProvider serviceProvider)
 {
-    public ITransacao CriaTransacao() => serviceProvider.GetRequiredService<ITransacao>();
+    public ITransacao CriaTransacao() => serviceProvider.GetService<ITransacao>()!;
 }

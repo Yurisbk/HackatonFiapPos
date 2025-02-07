@@ -10,6 +10,8 @@ public static class MemDB
     static public List<HorarioMedico> HorariosMedicos { get; } = new();
     static public List<Consulta> Consultas { get; } = new();
 
+    static public SemaphoreSlim DBLock { get; } = new(1, 1);
+
     static public int GetPK<T>(this List<T> lista) where T : Entidade
     {
         if (lista.Count == 0)

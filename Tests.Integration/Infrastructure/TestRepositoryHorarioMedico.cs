@@ -13,7 +13,6 @@ public class TestRepositoryHorarioMedico(WebAppFixture webAppFixture) : TestBase
     IRepositoryMedico repositoryMedico => ServiceProvider.GetService<IRepositoryMedico>()!;
     HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!;
 
-
     [Fact]
     public async Task TestCadastroHorarioMedico()
     {
