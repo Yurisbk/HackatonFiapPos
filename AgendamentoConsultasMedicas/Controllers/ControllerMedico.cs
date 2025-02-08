@@ -11,14 +11,14 @@ public class ControllerMedico(IServiceCadastroMedico serviceCadastroMedico, ISer
 {
     [HttpPost]
     [Route("gravar")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
-    public async Task<IActionResult> CadastrarMedico([FromBody] Medico medico)
+    public async Task<IActionResult> GravarMedico([FromBody] DTOMedico medico)
     {
-        await serviceCadastroMedico.GravarMedico(medico);
+        await serviceCadastroMedico.GravarMedico((Medico)medico!);
 
-        return Created();
+        return Accepted();
     }
 
     [HttpDelete]
@@ -35,12 +35,12 @@ public class ControllerMedico(IServiceCadastroMedico serviceCadastroMedico, ISer
 
     [HttpGet]
     [Route("resgatarPorCRM")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Medico))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DTOMedico))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
     public async Task<IActionResult> ResgatarPorEmail([FromQuery] string crm)
     {
-        return Ok(await serviceCadastroMedico.ResgatarMedicoPorCRM(crm));
+        return Ok((DTOMedico?)await serviceCadastroMedico.ResgatarMedicoPorCRM(crm));
     }
 
     [HttpGet]
@@ -55,17 +55,19 @@ public class ControllerMedico(IServiceCadastroMedico serviceCadastroMedico, ISer
 
     [HttpGet]
     [Route("listarMedicosEspecialidade")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Medico[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DTOMedico[]))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
     public async Task<IActionResult> ListarMedicosEspecialidade([FromQuery] string especialidade)
     {
-        return Ok(await serviceCadastroMedico.ListarMedicosAtivosNaEspecialidade(especialidade));
+        var medicos = await serviceCadastroMedico.ListarMedicosAtivosNaEspecialidade(especialidade);
+
+        return Ok(medicos.Select(m => (DTOMedico?)m).ToArray());
     }
 
     [HttpPost]
     [Route("registrarHorarioMedicoDiaSemana")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(Medico[]))]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
     public async Task<IActionResult> RegistrarHorariosMedico([FromBody] DTOHorarioMedicoDiaSemana horarioMedicoDiaSemana)

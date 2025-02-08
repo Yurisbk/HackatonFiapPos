@@ -11,14 +11,14 @@ public class ControllerPaciente(IServiceCadastroPaciente serviceCadastroPaciente
 {
     [HttpPost]
     [Route("gravar")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
-    public async Task<IActionResult> CadastrarPaciente([FromBody] Paciente paciente)
+    public async Task<IActionResult> GravarPaciente([FromBody] DTOPaciente paciente)
     {
-        await serviceCadastroPaciente.GravarPaciente(paciente);
+        await serviceCadastroPaciente.GravarPaciente((Paciente)paciente!);
 
-        return Created();
+        return Accepted();
     }
 
     [HttpDelete]
@@ -35,11 +35,11 @@ public class ControllerPaciente(IServiceCadastroPaciente serviceCadastroPaciente
 
     [HttpGet]
     [Route("resgatarPorEmail")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Paciente))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DTOPaciente))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
     public async Task<IActionResult> ResgatarPorEmail([FromQuery] string email)
     {
-        return Ok(await serviceCadastroPaciente.ResgatarPacientePorEmail(email));
+        return Ok((DTOPaciente?)(await serviceCadastroPaciente.ResgatarPacientePorEmail(email)));
     }
 }
