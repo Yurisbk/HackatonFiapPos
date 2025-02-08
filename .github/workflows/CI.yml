@@ -3,15 +3,15 @@ name: CI
 on:
   push:
     branches:
-      - "feature/mesh"
+      - "main"
   pull_request:
     branches:
-      - "main"
+      - "feature/mesh"
   workflow_dispatch:
 
 jobs:
   dockerhub:
-    name: Executando primeiro job
+    name: Push DockerHub
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,7 +31,7 @@ jobs:
           push: true
 
   build_and_test:
-    name: Executando segundo job
+    name: Executa Testes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
