@@ -40,7 +40,7 @@ public class ServiceCadastroMedico(
             foreach (var consultaAtiva in consultasAtivas)
                 await serviceConsulta.GravarStatusConsulta(consultaAtiva.Id!.Value, StatusConsulta.Cancelada, "Médico desligado do sistema.");
 
-            repositorioMedico.ExcluirMedico(id);
+            await repositorioMedico.ExcluirMedico(id);
 
             transacao.Gravar();
         }
