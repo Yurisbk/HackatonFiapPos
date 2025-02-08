@@ -2,5 +2,5 @@
 
 public class Usuario : Pessoa
 {
-    public string? HashSenha;
+    public string? HashSenha { get; set; }
 }

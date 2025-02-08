@@ -4,8 +4,8 @@ namespace Domain.Entity;
 
 public struct Periodo: IValidavel
 {
-    public TimeSpan HoraInicial;
-    public TimeSpan HoraFinal;
+    public TimeSpan HoraInicial { get; set; }
+    public TimeSpan HoraFinal { get; set; }
 
     public TimeSpan Duracao => HoraFinal - HoraInicial;
 
@@ -59,9 +59,9 @@ public struct Periodo: IValidavel
 
 public class HorarioMedico : Entidade, IValidavel
 {
-    public int IdMedico;
-    public DayOfWeek DiaSemana;
-    public Periodo Periodo;
+    public int IdMedico { get; set; }
+    public DayOfWeek DiaSemana { get; set; }
+    public Periodo Periodo { get; set; }
 
     public HorarioMedico()
     {

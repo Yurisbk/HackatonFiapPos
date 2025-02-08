@@ -2,9 +2,9 @@
 
 public class DTOHorariosLivre
 {
-    public int IdMedico;
-    public DateTime Horario;
-    public double ValorConsulta;
+    public int IdMedico { get; set; }
+    public DateTime Horario { get; set; }
+    public double ValorConsulta { get; set; }
 
     public override string ToString() => $"IdMedico: {IdMedico}; Horario: {Horario}; ValorConsulta:{ValorConsulta}";
 }

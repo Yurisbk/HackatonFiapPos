@@ -101,7 +101,16 @@ public class ServiceConsulta(
         }
     }
 
-    public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string? justificativaCancelamento = null)
+    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
+        => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
+
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
+        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data);
+
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
+        => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
+
+    public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string? justificativa = null)
     {
         using (var transacao = transacaoFactory.CriaTransacao())
         {
@@ -119,20 +128,11 @@ public class ServiceConsulta(
                 throw new InvalidOperationException("Não é possivel cancelar consulta não agendada.");
 
             consulta.StatusConsulta = statusConsulta;
-            consulta.JustificativaCancelamento = justificativaCancelamento;
+            consulta.JustificativaCancelamento = justificativa;
 
             await repositoryConsulta.GravarStatusConsulta(consulta);
 
             transacao.Gravar();
         }
     }
-
-    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
-        => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
-
-    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
-        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data);
-
-    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
-        => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
 }
