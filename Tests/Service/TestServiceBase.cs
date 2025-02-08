@@ -52,15 +52,13 @@ public class TestServiceBase
     {
         var services = new ServiceCollection();
 
-        // Configuração simulada
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "APIAutenticacao", "https://api.exemplo.com" }
+                { "APIAutenticacao", "https://localhost:7182/" }
             })
             .Build();
 
-        // Adicionando a factory de HttpClient
         services.AddHttpClient("AutenticacaoAPI", client =>
         {
             var apiAutenticacao = configuration.GetValue<string>("APIAutenticacao");
