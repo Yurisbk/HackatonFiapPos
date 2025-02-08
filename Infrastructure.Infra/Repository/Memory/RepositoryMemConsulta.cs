@@ -13,12 +13,11 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         {
             ArgumentNullException.ThrowIfNull(consulta);
 
-            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora  && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Medico ja tem consulta marcada neste horário.");
-
-            MemDB.Consultas.CheckUK(c => c.IdPaciente == consulta.IdPaciente && c.DataHora == consulta.DataHora && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Paciente ja tem outra consulta marcada neste horário.");
-
             MemDB.Medicos.CheckFK(consulta.IdMedico, "Medico não encontrado.");
             MemDB.Pacientes.CheckFK(consulta.IdPaciente, "Paciente não encontrado.");
+
+            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora  && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Medico ja tem consulta marcada neste horário.");
+            MemDB.Consultas.CheckUK(c => c.IdPaciente == consulta.IdPaciente && c.DataHora == consulta.DataHora && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Paciente ja tem outra consulta marcada neste horário.");
 
             MemDB.Consultas.Insert(consulta);
         }

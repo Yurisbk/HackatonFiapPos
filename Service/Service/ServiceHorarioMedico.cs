@@ -5,7 +5,10 @@ using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico, HelperTransacao helperTransacao) : IServiceHorarioMedico
+public class ServiceHorarioMedico(
+    IRepositoryMedico repositoryMedico, 
+    IRepositoryHorarioMedico repositoryHorarioMedico, 
+    HelperTransacao helperTransacao) : IServiceHorarioMedico
 {
     public async Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {

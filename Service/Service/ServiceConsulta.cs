@@ -10,7 +10,7 @@ namespace Service.Service;
 public class ServiceConsulta(
     IRepositoryConsulta repositoryConsulta,
     IServiceHorarioMedico serviceHorarioMedico,
-    IServiceCadastroMedico serviceCadastroMedico,
+    IRepositoryMedico repositoryMedico,
     HelperTransacao helperTransacao) : IServiceConsulta
 {
     public async Task<DTOHorariosLivre[]> ListarAgendaMedico(int idMedico, int dias = 7)
@@ -22,7 +22,7 @@ public class ServiceConsulta(
         if (dias < 1)
             throw new ArgumentException("numero de dias deve ser maior que 0.");
 
-        var medico = await serviceCadastroMedico.ResgatarMedicoPorId(idMedico);
+        var medico = await repositoryMedico.ResgatarMedicoPorId(idMedico);
         if (medico == null)
             throw new ArgumentException("Médico não encontrado.");
 

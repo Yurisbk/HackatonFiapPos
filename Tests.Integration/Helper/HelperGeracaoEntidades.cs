@@ -63,7 +63,7 @@ public class HelperGeracaoEntidades()
         lock (counterLock)
         {
             string especialidade = EspecialidadesMedicas[new Random().Next(0, EspecialidadesMedicas.Length)];
-            return new Medico() { Nome = $"Medico {++counter}", CPF = GerarCpf(), EMail = $"medico{counter}@teste.com", Especialidade = especialidade, CRM = GerarCrm() };
+            return new Medico() { Nome = $"Medico {++counter}", CPF = GerarCpf(), EMail = $"medico{counter}@teste.com", Especialidade = especialidade, CRM = GerarCrm(), ValorConsulta = 200 };
         }
     }
 

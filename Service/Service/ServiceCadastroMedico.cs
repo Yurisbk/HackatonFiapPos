@@ -6,7 +6,10 @@ using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IServiceConsulta serviceConsulta, HelperTransacao helperTransacao): IServiceCadastroMedico
+public class ServiceCadastroMedico(
+    IRepositoryMedico repositorioMedico, 
+    IServiceConsulta serviceConsulta, 
+    HelperTransacao helperTransacao): IServiceCadastroMedico
 {
     public async Task<Medico?> ResgatarMedicoPorId(int id)
         => await repositorioMedico.ResgatarMedicoPorId(id);

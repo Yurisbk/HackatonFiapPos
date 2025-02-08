@@ -11,15 +11,52 @@ public class TestRepositoryConsulta(WebAppFixture webAppFixture) : TestBaseWebAp
 {
     IRepositoryConsulta repositoryConsulta => ServiceProvider.GetService<IRepositoryConsulta>()!;
     IRepositoryMedico repositoryMedico => ServiceProvider.GetService<IRepositoryMedico>()!;
+    IRepositoryPaciente repositoryPaciente => ServiceProvider.GetService<IRepositoryPaciente>()!;
     HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!;
 
     [Fact]
-    public async Task TestCadastroHorarioMedico()
+    public async Task TestCadastroConsultas()
     {
         using (var transacao = helperTransacao.CriaTransacao())
         {
-            Medico medico = HelperGeracaoEntidades.CriaMedicoValido()!;
+            // Registra medico e paciente valido
+            Medico medico = HelperGeracaoEntidades.CriaMedicoValido();
             await repositoryMedico.RegistarNovoMedico(medico);
+
+            Paciente paciente = HelperGeracaoEntidades.CriaPacienteValido();
+            await repositoryPaciente.RegistarNovoPaciente(paciente);
+
+            // Registra consulta e assegura criação
+
+            Consulta consulta = new Consulta() { IdMedico = medico.Id!.Value, IdPaciente = paciente.Id!.Value, DataHora = DateTime.Now };    
+            await repositoryConsulta.RegistrarConsulta(consulta);
+            Assert.NotNull(consulta.Id);
+
+            // Testa regstate por id
+
+            Consulta? consultaResgatada = await repositoryConsulta.ResgatarConsultaPorId(consulta.Id.Value);
+            Assert.NotNull(consultaResgatada);
+
+            // Assegura listagem de consultas corretas
+
+            var consultas = await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(medico.Id!.Value);
+            Assert.Single(consultas);
+
+            consultas = await repositoryConsulta.ListarConsultasAtivasMedico(medico.Id!.Value, DateTime.Today);
+            Assert.Single(consultas);
+
+            consultas = await repositoryConsulta.ListarConsultasAtivasPaciente(paciente.Id!.Value, DateTime.Today);
+            Assert.Empty(consultas);
+
+            // Testa gravação de status da consulta
+
+            consulta.StatusConsulta = Domain.Enum.StatusConsulta.Agendada;
+            await repositoryConsulta.GravarStatusConsulta(consulta);
+
+            // Assegura troca de status
+
+            consultas = await repositoryConsulta.ListarConsultasAtivasPaciente(paciente.Id!.Value, DateTime.Today);
+            Assert.Single(consultas);
         }
     }
 }

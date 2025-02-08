@@ -21,13 +21,18 @@ public class TestRepositoryHorarioMedico(WebAppFixture webAppFixture) : TestBase
             Medico medico = HelperGeracaoEntidades.CriaMedicoValido()!;
             await repositoryMedico.RegistarNovoMedico(medico);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(-1, DayOfWeek.Monday, []));
+            // Testa horarios invalidos
 
+            await Assert.ThrowsAsync<InvalidOperationException>(() => repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(-1, DayOfWeek.Monday, []));
             await Assert.ThrowsAsync<ArgumentException>(() => repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(medico.Id!.Value, DayOfWeek.Monday, new Periodo(8, 12), new Periodo(11, 14)));
+
+            // Testa e assegura gravaão de horarios validos
 
             await repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(medico.Id!.Value, DayOfWeek.Monday, new Periodo(8, 12), new Periodo(13, 14));
 
-            //Assert.Equal(2, horarios.Length);
+            var horarios = await repositoryHorarioMedico.ResgatarHorariosMedicoDiaSemana(medico.Id!.Value, DayOfWeek.Monday);
+
+            Assert.True(horarios.Length == 2);
         }
     }
 }
