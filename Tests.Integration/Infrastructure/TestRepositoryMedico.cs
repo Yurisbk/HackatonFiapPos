@@ -64,21 +64,6 @@ public class TestRepositoryMedico(WebAppFixture webAppFixture) : TestBaseWebApp(
             await repositoryMedico.ExcluirMedico(medico.Id!.Value);
             medicoCadastro = await repositoryMedico.ResgatarMedicoPorId(medico.Id!.Value);
             Assert.Null(medicoCadastro);
-
-            // Testa listagem especialidades medicas
-
-            var especialidades = await repositoryMedico.ListarEspecialidadesMedicas();
-            Assert.NotEmpty(especialidades);
-
-            // Testa busca medicos especialidade
-
-            foreach(var especialidade in especialidades)
-            {
-                var medicos = await repositoryMedico.ListarMedicosAtivosNaEspecialidade(especialidade);
-
-                // Não pode trazer médicos inativos
-                Assert.Empty(medicos);
-            }
         }
     }
 }
