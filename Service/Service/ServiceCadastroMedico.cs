@@ -45,6 +45,6 @@ public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IService
     public async Task<string[]> ListarEspecialidadeMedicas() 
         => await repositorioMedico.ListarEspecialidadesMedicas();
 
-    public async Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade) 
-        => await repositorioMedico.ListarMedicosDisponiveisNaEspecialidade(especialidade);
+    public async Task<Medico[]> ListarMedicosAtivosNaEspecialidade(string especialidade) 
+        => await repositorioMedico.ListarMedicosAtivosNaEspecialidade(especialidade);
 }

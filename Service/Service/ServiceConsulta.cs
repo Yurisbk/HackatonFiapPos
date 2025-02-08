@@ -55,6 +55,53 @@ public class ServiceConsulta(
         return horariosLivre.ToArray();
     }
 
+    public async Task RegistrarConsulta(int idMedico, int idPaciente, DateTime data)
+    {
+        using (var transacao = helperTransacao.CriaTransacao())
+        {
+            // Arredonda data para horario cheia
+            data = new DateTime(data.Year, data.Month, data.Day, data.Hour, 0, 0);
+
+            var horarios = await serviceHorarioMedico.ResgatarHorariosMedicoDiaSemana(idMedico, data.DayOfWeek);
+
+            // Verifica se medico atende no dia da semana
+            if (horarios == null || horarios.Length == 0)
+                throw new InvalidOperationException("Médico não atende neste dia da semana.");
+
+            // Verifica se médico atende no horario solicitado
+            if (!horarios.Any(horario => horario.Periodo.ContemHora(data.Hour)))
+                throw new InvalidOperationException("Médico não atende no horário solicitado");
+
+            // Verifica se médico já tem consulta marcada no horário solicitado
+            var consultas = await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data.Date);
+            if (consultas != null && consultas.Length > 0)
+            {
+                if (consultas.Any(consulta => consulta.DataHora.Hour == data.Hour))
+                    throw new InvalidOperationException("Médico já tem consulta marcada neste horário.");
+            }
+
+            // Verifica se paciente ja tem consulta marcada no horario
+            consultas = await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data.Date);
+            if (consultas != null && consultas.Length > 0)
+            {
+                if (consultas.Any(consulta => consulta.DataHora.Hour == data.Hour))
+                    throw new InvalidOperationException("Paciente já tem consulta marcada neste horário.");
+            }
+
+            Consulta consulta = new Consulta()
+            {
+                DataHora = data,
+                IdMedico = idMedico,
+                IdPaciente = idPaciente,
+                StatusConsulta = StatusConsulta.Pendente
+            };
+
+            await repositoryConsulta.RegistrarConsulta(consulta);
+
+            transacao.Gravar();
+        }
+    }
+
     public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string justificativaCancelamento)
     {
         using (var transacao = helperTransacao.CriaTransacao())
@@ -84,9 +131,9 @@ public class ServiceConsulta(
     public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
         => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
 
-    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente)
-        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente);
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
+        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data);
 
-    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data)
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
         => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
 }

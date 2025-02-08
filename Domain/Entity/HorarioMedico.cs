@@ -38,6 +38,8 @@ public struct Periodo: IValidavel
         return true;
     }
 
+    public bool ContemHora(int hora) => (HoraInicial.TotalHours <= hora) && (HoraFinal.TotalHours >= hora);
+
     public override string ToString() => $"{HoraInicial} - {HoraFinal}";
 
     static public (Periodo periodo1, Periodo periodo2)? ChecaConflitos(params Periodo[] periodos)

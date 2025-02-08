@@ -9,5 +9,5 @@ public interface IServiceCadastroMedico
     Task GravarMedico(Medico medico);
     Task ExcluirMedico(int id);
     Task<string[]> ListarEspecialidadeMedicas();
-    Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade);
+    Task<Medico[]> ListarMedicosAtivosNaEspecialidade(string especialidade);
 }

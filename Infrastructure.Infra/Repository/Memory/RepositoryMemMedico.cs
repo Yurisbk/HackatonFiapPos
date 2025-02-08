@@ -104,7 +104,7 @@ public class RepositoryMemMedico : IRepositoryMedico
         }
     }
 
-    public async Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade)
+    public async Task<Medico[]> ListarMedicosAtivosNaEspecialidade(string especialidade)
     {
         await MemDB.DBLock.WaitAsync();
         try

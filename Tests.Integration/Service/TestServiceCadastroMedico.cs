@@ -12,7 +12,7 @@ public class TestServiceCadastroMedico(WebAppFixture webAppFixture) : TestBaseWe
     HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!; 
 
     [Fact]
-    public async Task TestGravarMedico()
+    public async Task TestCadastroMedico()
     {
         using (var transacao = helperTransacao.CriaTransacao())
         {
@@ -39,6 +39,40 @@ public class TestServiceCadastroMedico(WebAppFixture webAppFixture) : TestBaseWe
             medicoCadastro = await serviceCadastroMedico.ResgatarMedicoPorCRM(medico.CRM!);
 
             Assert.Null(medicoCadastro);
+        }
+    }
+
+    [Fact]
+    public async Task TestCadastroMedicoEspecialidades()
+    {
+        using (var transacao = helperTransacao.CriaTransacao())
+        {
+            const string especialidadeTeste = "especialidade teste";
+
+            for (int i = 0; i < 5; i++)
+            {
+                var medico = HelperGeracaoEntidades.CriaMedicoValido();
+                medico.Especialidade = especialidadeTeste;
+                await serviceCadastroMedico.GravarMedico(medico);
+            }
+
+            const string especialidadeTeste2 = "especialidade teste2";
+
+            for (int i = 0; i < 3; i++)
+            {
+                var medico = HelperGeracaoEntidades.CriaMedicoValido();
+                medico.Especialidade = especialidadeTeste2;
+                await serviceCadastroMedico.GravarMedico(medico);
+            }
+
+            var especialidades = await serviceCadastroMedico.ListarEspecialidadeMedicas();
+            Assert.Equal(2, especialidades.Length);
+
+            var medicos = await serviceCadastroMedico.ListarMedicosAtivosNaEspecialidade(especialidadeTeste);
+            Assert.Equal(5, medicos.Length);
+
+            medicos = await serviceCadastroMedico.ListarMedicosAtivosNaEspecialidade(especialidadeTeste2);
+            Assert.Equal(3, medicos.Length);
         }
     }
 }

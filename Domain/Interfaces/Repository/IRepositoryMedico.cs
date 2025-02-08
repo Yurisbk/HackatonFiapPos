@@ -10,5 +10,5 @@ public interface IRepositoryMedico
     Task AlterarDadosMedico(Medico Medico);
     Task ExcluirMedico(int id);
     Task<string[]> ListarEspecialidadesMedicas();
-    Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade);
+    Task<Medico[]> ListarMedicosAtivosNaEspecialidade(string especialidade);
 }

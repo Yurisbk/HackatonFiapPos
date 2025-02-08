@@ -54,12 +54,12 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         }
     }
 
-    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente)
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
     {
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.Consultas.Where(c => c.StatusConsulta == StatusConsulta.Agendada && c.IdPaciente == idPaciente).ToArray();
+            return MemDB.Consultas.Where(c => c.StatusConsulta == StatusConsulta.Agendada && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && c.IdPaciente == idPaciente).ToArray();
         }
         finally
         {
@@ -67,7 +67,7 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         }
     }
 
-    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data)
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
     {
         await MemDB.DBLock.WaitAsync();
         try
