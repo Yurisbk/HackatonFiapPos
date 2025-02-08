@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entity;
 
-public class Paciente : Usuario
+public class Paciente : Pessoa
 {
 
 }

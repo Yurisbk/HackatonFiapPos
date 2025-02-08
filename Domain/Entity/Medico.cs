@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entity;
 
-public class Medico : Usuario
+public class Medico : Pessoa
 {
     public string? CRM { get; set; }
     public string? Especialidade { get; set; }

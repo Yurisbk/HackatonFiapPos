@@ -8,6 +8,7 @@ public class Pessoa : Entidade, IValidavel
     public string? Nome { get; set; }
     public string? CPF { get; set; }
     public string? EMail { get; set; }
+    public string AuthId { get; set; }
 
     public virtual void Validar()
     {

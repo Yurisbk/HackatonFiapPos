@@ -1,6 +1,7 @@
-﻿namespace Domain.Entity;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class Usuario : Pessoa
+namespace Domain.Entity;
+
+public class Usuario : IdentityUser
 {
-    public string? HashSenha { get; set; }
 }
