@@ -5,7 +5,7 @@ namespace Domain.Entity;
 
 public class Entidade
 {
-    public int? Id;
+    public int? Id { get; set; }
 
     public override string ToString()
     {

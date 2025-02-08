@@ -16,8 +16,8 @@ public class RepositoryMemConsulta : IRepositoryConsulta
             MemDB.Medicos.CheckFK(consulta.IdMedico, "Medico não encontrado.");
             MemDB.Pacientes.CheckFK(consulta.IdPaciente, "Paciente não encontrado.");
 
-            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora  && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Medico ja tem consulta marcada neste horário.");
-            MemDB.Consultas.CheckUK(c => c.IdPaciente == consulta.IdPaciente && c.DataHora == consulta.DataHora && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Paciente ja tem outra consulta marcada neste horário.");
+            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora  && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Confirmada), "Medico ja tem consulta marcada neste horário.");
+            MemDB.Consultas.CheckUK(c => c.IdPaciente == consulta.IdPaciente && c.DataHora == consulta.DataHora && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Confirmada), "Paciente ja tem outra consulta marcada neste horário.");
 
             MemDB.Consultas.Insert(consulta);
         }
@@ -58,7 +58,7 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.Consultas.Where(c => c.StatusConsulta == StatusConsulta.Agendada && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && c.IdPaciente == idPaciente).ToArray();
+            return MemDB.Consultas.Where(c => (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Confirmada) && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && c.IdPaciente == idPaciente).ToArray();
         }
         finally
         {
@@ -73,7 +73,7 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         {
             MemDB.Medicos.CheckFK(idMedico, "Medico não encontrado.");
 
-            return MemDB.Consultas.Where(c => c.IdMedico == idMedico && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada)).ToArray();
+            return MemDB.Consultas.Where(c => c.IdMedico == idMedico && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Confirmada)).ToArray();
         }
         finally
         {

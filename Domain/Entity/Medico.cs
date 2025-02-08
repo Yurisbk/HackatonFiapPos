@@ -2,9 +2,9 @@
 
 public class Medico : Usuario
 {
-    public string? CRM;
-    public string? Especialidade;
-    public double ValorConsulta;
+    public string? CRM { get; set; }
+    public string? Especialidade { get; set; }
+    public double ValorConsulta { get; set; }
 
     public override void Validar()
     {

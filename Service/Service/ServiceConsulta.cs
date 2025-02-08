@@ -39,14 +39,14 @@ public class ServiceConsulta(
             }
 
             // Cria um array com todas as horas livres do médico no dia
-            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial.Hours, horario.Periodo.HoraFinal.Hours)).ToArray();
+            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial.Hours, horario.Periodo.HoraFinal.Hours - horario.Periodo.HoraInicial.Hours + 1)).ToArray();
 
             // Lista as consultas do medico no dia e remove as horas ocupadas
             var consultas = await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data.Date);
             horasLivre = horasLivre.Except(consultas.Select(consulta => consulta.DataHora.Hour)).ToArray();
 
             // Adiciona os horarios livres na lista de retorno
-            horariosLivre.AddRange(horasLivre.Select(h => new DTOHorariosLivre() { Horario = new DateTime(data.Year, data.Month, data.Day, h, 0, 0), IdMedico = idMedico }));
+            horariosLivre.AddRange(horasLivre.Select(h => new DTOHorariosLivre() { Horario = new DateTime(data.Year, data.Month, data.Day, h, 0, 0), IdMedico = idMedico, ValorConsulta = medico.ValorConsulta }));
 
             data = data.AddDays(1);
         }
@@ -101,7 +101,16 @@ public class ServiceConsulta(
         }
     }
 
-    public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string justificativaCancelamento)
+    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
+        => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
+
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
+        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data);
+
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
+        => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
+
+    public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string? justificativa = null)
     {
         using (var transacao = transacaoFactory.CriaTransacao())
         {
@@ -112,27 +121,18 @@ public class ServiceConsulta(
             if (consulta == null)
                 throw new ArgumentException("Consulta não encontrada.");
 
-            if ((statusConsulta == StatusConsulta.Agendada || statusConsulta == StatusConsulta.Recusada) && consulta.StatusConsulta != StatusConsulta.Pendente)
+            if ((statusConsulta == StatusConsulta.Confirmada || statusConsulta == StatusConsulta.Recusada) && consulta.StatusConsulta != StatusConsulta.Pendente)
                 throw new InvalidOperationException("Não é possivel aceitar ou recusar consulta que não esteja pendente.");
 
-            if (statusConsulta == StatusConsulta.Cancelada && consulta.StatusConsulta != StatusConsulta.Agendada)
+            if (statusConsulta == StatusConsulta.Cancelada && consulta.StatusConsulta != StatusConsulta.Confirmada)
                 throw new InvalidOperationException("Não é possivel cancelar consulta não agendada.");
 
             consulta.StatusConsulta = statusConsulta;
-            consulta.JustificativaCancelamento = justificativaCancelamento;
+            consulta.JustificativaCancelamento = justificativa;
 
             await repositoryConsulta.GravarStatusConsulta(consulta);
 
             transacao.Gravar();
         }
     }
-
-    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
-        => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
-
-    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null)
-        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente, data);
-
-    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null)
-        => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
 }
