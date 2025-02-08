@@ -17,7 +17,7 @@ create table paciente(
 
 create table consultas(
     id serial primary key,
-    id-medico varchar,
-    hora-livre varchar,
-    horario-livre varchar
+    idmedico varchar,
+    horalivre varchar,
+    horariolivre varchar
 );

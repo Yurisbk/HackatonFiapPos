@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Integration", "Tests.Integration\Tests.Integration.csproj", "{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumerNotificacao", "ConsumerNotificacao\ConsumerNotificacao.csproj", "{363D7E44-116C-48E5-8E0C-E04163943E7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E52B04C-D25F-49EA-A349-6F52BE5B08DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{363D7E44-116C-48E5-8E0C-E04163943E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{363D7E44-116C-48E5-8E0C-E04163943E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{363D7E44-116C-48E5-8E0C-E04163943E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{363D7E44-116C-48E5-8E0C-E04163943E7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
