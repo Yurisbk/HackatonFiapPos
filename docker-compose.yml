@@ -17,7 +17,9 @@ services:
     command: ["postgres"]
     
   api-auth-server:
-    image: netiim/auth-server:latest
+    build:
+      context: .
+      dockerfile: dockerfile-authserver
     container_name: auth-server
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -28,7 +30,9 @@ services:
       - hackaton-bridge
     ports:
       - "5010:8080"
-      - "5011:8081"  
+      - "5011:8081"
+  
+
 
   pgadmin-compose:
     image: dpage/pgadmin4
@@ -100,6 +104,7 @@ services:
     depends_on:
       - rabbitmq_exporter
       - postgres_exporter
+      - api-auth-server
       # - api
 
   grafana:
@@ -109,12 +114,11 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
 
-      retries: 5
 
 networks:
   hackaton-bridge:
