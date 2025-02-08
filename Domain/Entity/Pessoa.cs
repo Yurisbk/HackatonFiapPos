@@ -5,10 +5,10 @@ namespace Domain.DTO;
 
 public class Pessoa : Entidade, IValidavel
 {
-    public string? Nome;
-    public string? CPF;
-    public string? EMail;
-
+    public string? Nome { get; set; }
+    public string? CPF { get; set; }
+    public string? EMail { get; set; }
+    public string AuthId { get; set; }
     public virtual void Validar()
     {
         if (!Validacoes.ValidarNome(Nome))

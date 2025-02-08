@@ -3,23 +3,43 @@ version: '3'
 services:
   postgres:
     image: "postgres"
+    container_name: postgres
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=root
     ports:
       - "5432:5432"
+    networks:
+      - hackaton-bridge      
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d
     command: ["postgres"]
+    
+  api-auth-server:
+    image: netiim/auth-server:latest
+    container_name: auth-server
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=AutenticacaoIdentity;Username=root;Password=root;
+    depends_on:
+      - postgres
+    networks:
+      - hackaton-bridge
+    ports:
+      - "5010:8080"
+      - "5011:8081"  
 
   pgadmin-compose:
     image: dpage/pgadmin4
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: "hackaton@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "123456"
     ports:
-      - "8081:80"
+      - "54321:80"
+    networks:
+      - hackaton-bridge     
     depends_on:
       - postgres
 
@@ -34,12 +54,15 @@ services:
 
   rabbitmq:
     image: "masstransit/rabbitmq"
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - hackaton-bridge      
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 30s
@@ -91,3 +114,8 @@ services:
     depends_on:
       - prometheus
 
+      retries: 5
+
+networks:
+  hackaton-bridge:
+    driver: bridge

@@ -5,6 +5,7 @@ using Domain.Interfaces.Service;
 using Service.Service;
 using Domain.Interfaces.Repository;
 using Domain.DTO;
+using ContatoAPI.Extension;
 using Prometheus;
 
 namespace AgendamentoConsultasMedicas;
@@ -17,15 +18,14 @@ public class Program
         var configuration = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .Build();
-
-        // Add services to the container.
-
+        builder.Services.AddInjecoesDependencias();
+        builder.Services.AddConfiguracaoAPIAuthenticacao(configuration);
+        builder.Services.AddIdentityConfiguration(configuration);
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddDocumentacaoSwagger();
 
-        var connectionstring = configuration.GetValue<string>("ConnectionStringPostgres");
+        var connectionstring = configuration.GetValue<string>("APIAutenticacao");
         builder.Services.AddScoped<IDbConnection>((connection) => new NpgsqlConnection(connectionstring));
 
         //adiciona masstransit
@@ -65,6 +65,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         #region .::Prometheus::.

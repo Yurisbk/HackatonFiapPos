@@ -9,6 +9,7 @@ public class RepositoryMemMedico: IRepositoryMedico
     public Medico? ResgatarMedicoPorId(int id) => MemDB.Medicos.FirstOrDefault(p => p.Id == id)?.DeepClone();
 
     public Medico? ResgatarMedicoPorEmail(string email) => MemDB.Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone();
+    public Medico? ResgatarMedicoPorCRM(string crm) => MemDB.Medicos.FirstOrDefault(p => p.CRM == crm)?.DeepClone();
 
     public void RegistarNovoMedico(Medico medico)
     {

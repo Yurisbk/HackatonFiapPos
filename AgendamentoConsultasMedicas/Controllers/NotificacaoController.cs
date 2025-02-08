@@ -23,20 +23,30 @@ namespace AgendamentoConsultasMedicas.Controllers
         public async Task<IActionResult> GetAllContacts()
         {
             DTONotificacao Notificacao = new DTONotificacao
-            {         
+            {
                 EmailMedico = "atendimentoconsultashackaton@gmail.com",
+
+                EmailPaciente = "atendimentoconsultashackaton@gmail.com",
 
                 NomePaciente = "Faustão Silva",
 
                 NomeMedico = "House",
-        
+
                 HorarioConsulta = "03/03/2025 04:00:00",
+
+                Confirmacao = false
 
             };
 
-            await _notifica.EnviaNotificacao(Notificacao);
+            await _notifica.EnviaNotificacaoMedico(Notificacao);
             
             return Ok();
+        }
+        [Authorize]
+        [HttpGet("ValidaToken")]
+        public async Task<IActionResult> ValidaToken()
+        {
+           return Ok("Token válidado com sucesso!");
         }
     }
 }
