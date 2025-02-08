@@ -2,10 +2,14 @@
 using Domain.Entity;
 using Domain.Interfaces.Service;
 using Service.Helper;
+using Domain.Enum;
 
 namespace Service.Service;
 
-public class ServiceCadastroPaciente(IRepositoryPaciente repositorioPaciente, HelperTransacao helperTransacao) : IServiceCadastroPaciente
+public class ServiceCadastroPaciente(
+    IRepositoryPaciente repositorioPaciente, 
+    IServiceConsulta serviceConsulta, 
+    HelperTransacao helperTransacao) : IServiceCadastroPaciente
 {
     public async Task<Paciente?> ResgatarPacientePorEmail(string email) => await repositorioPaciente.ResgatarPacientePorEmail(email);
 
@@ -30,6 +34,10 @@ public class ServiceCadastroPaciente(IRepositoryPaciente repositorioPaciente, He
     {
         using (var transacao = helperTransacao.CriaTransacao())
         {
+            var consultasAtivas = await serviceConsulta.ListarConsultasAtivasPaciente(id);
+            foreach (var consultaAtiva in consultasAtivas)
+                await serviceConsulta.GravarStatusConsulta(consultaAtiva.Id!.Value, StatusConsulta.Cancelada, "Paciente desligado do sistema.");
+
             await repositorioPaciente.ExcluirPaciente(id);
 
             transacao.Gravar();

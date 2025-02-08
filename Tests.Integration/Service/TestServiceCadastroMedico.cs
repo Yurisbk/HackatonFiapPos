@@ -26,9 +26,9 @@ public class TestServiceCadastroMedico(WebAppFixture webAppFixture) : TestBaseWe
 
             await serviceCadastroMedico.GravarMedico(medico);
 
-            // Testa resgate por email
+            // Testa resgate por CRM
 
-            var medicoCadastro = await serviceCadastroMedico.ResgatarMedicoPorEmail(medico.EMail!);
+            var medicoCadastro = await serviceCadastroMedico.ResgatarMedicoPorCRM(medico.CRM!);
 
             Assert.Equal(medico.Nome, medicoCadastro?.Nome);
 
@@ -36,7 +36,7 @@ public class TestServiceCadastroMedico(WebAppFixture webAppFixture) : TestBaseWe
 
             await serviceCadastroMedico.ExcluirMedico(medico.Id!.Value);
 
-            medicoCadastro = await serviceCadastroMedico.ResgatarMedicoPorEmail(medico.EMail!);
+            medicoCadastro = await serviceCadastroMedico.ResgatarMedicoPorCRM(medico.CRM!);
 
             Assert.Null(medicoCadastro);
         }

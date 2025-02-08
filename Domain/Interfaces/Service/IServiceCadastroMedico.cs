@@ -4,9 +4,10 @@ namespace Domain.Interfaces.Service;
 
 public interface IServiceCadastroMedico
 {
-    Task ExcluirMedico(int id);
+    Task<Medico?> ResgatarMedicoPorId(int id);
+    Task<Medico?> ResgatarMedicoPorCRM(string email);
     Task GravarMedico(Medico medico);
-    Task<Medico?> ResgatarMedicoPorEmail(string email);
-    Task<Medico[]> ListarMedicos(string especialidade, DayOfWeek? atendeDiaSemana);
+    Task ExcluirMedico(int id);
     Task<string[]> ListarEspecialidadeMedicas();
+    Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade);
 }

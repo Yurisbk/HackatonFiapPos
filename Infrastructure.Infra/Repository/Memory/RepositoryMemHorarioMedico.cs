@@ -38,16 +38,14 @@ public class RepositoryMemHorarioMedico : IRepositoryHorarioMedico
         }
     }
 
-    public async Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana)
+    public async Task<HorarioMedico[]> ResgatarHorariosMedicoDiaSemana(int idMedico, DayOfWeek dayOfWeek)
     {
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.HorariosMedicos
-                .Where(horario => horario.DiaSemana == diaSemana)
-                .OrderBy(horario => horario.IdMedico)
-                .ThenBy(horario => horario.Periodo.HoraInicial)
-                .ToArray();
+            MemDB.Medicos.CheckFK(idMedico, "Medico não encontrado.");
+
+            return MemDB.HorariosMedicos.Where(h => h.IdMedico == idMedico && h.DiaSemana == dayOfWeek).OrderBy(h => h.Periodo.HoraInicial).ToArray();
         }
         finally
         {

@@ -1,108 +1,92 @@
 ﻿using Domain.DTO;
 using Domain.Entity;
+using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
 using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceConsulta(IServiceHorarioMedico serviceHorarioMedico, IRepositoryConsulta repositoryConsulta, HelperTransacao helperTransacao): IServiceConsulta
+public class ServiceConsulta(
+    IRepositoryConsulta repositoryConsulta,
+    IServiceHorarioMedico serviceHorarioMedico,
+    IServiceCadastroMedico serviceCadastroMedico,
+    HelperTransacao helperTransacao) : IServiceConsulta
 {
-    public class AgendasMedicos
+    public async Task<DTOHorariosLivre[]> ListarAgendaMedico(int idMedico, int dias = 7)
     {
-        class HorasLivres
-        {
-            bool[] Horas = new bool[24];
+        DateTime data = DateTime.Today;
 
-            public bool this[int hora]
+        List<DTOHorariosLivre> horariosLivre = new();
+
+        if (dias < 1)
+            throw new ArgumentException("numero de dias deve ser maior que 0.");
+
+        var medico = await serviceCadastroMedico.ResgatarMedicoPorId(idMedico);
+        if (medico == null)
+            throw new ArgumentException("Médico não encontrado.");
+
+        Dictionary<DayOfWeek, HorarioMedico[]> bufferHorariosDiaSemana = new();
+
+        while ((data.Date - DateTime.Today).Days < dias)
+        {
+            List<int> horariosLivres = new();
+
+            // Verifica se já tem os horarios do medico no dia da semana em buffer, evitando carregamento duplicado
+            if (!bufferHorariosDiaSemana.TryGetValue(data.DayOfWeek, out HorarioMedico[] horariosMedico))
             {
-                get => Horas[Math.Clamp(hora, 0, 23)];
-                set => Horas[Math.Clamp(hora, 0, 23)] = value;
+                horariosMedico = await serviceHorarioMedico.ResgatarHorariosMedicoDiaSemana(idMedico, data.DayOfWeek);
+                bufferHorariosDiaSemana.Add(data.DayOfWeek, horariosMedico);
             }
 
-            public override string ToString() => string.Join(',', Horas.Select((live, hora) => live ? $"{hora}:00" : string.Empty));
+            // Cria um array com todas as horas livres do médico no dia
+            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial.Hours, horario.Periodo.HoraFinal.Hours)).ToArray();
+
+            // Lista as consultas do medico no dia e remove as horas ocupadas
+            var consultas = await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data.Date);
+            horasLivre = horasLivre.Except(consultas.Select(consulta => consulta.DataHora.Hour)).ToArray();
+
+            // Adiciona os horarios livres na lista de retorno
+            horariosLivre.AddRange(horasLivre.Select(h => new DTOHorariosLivre() { Horario = new DateTime(data.Year, data.Month, data.Day, h, 0, 0), IdMedico = idMedico }));
+
+            data = data.AddDays(1);
         }
 
-        Dictionary<(int idMedico, DateTime data), HorasLivres> Agendas = new();
-
-        HorasLivres GetHorasLivresMedicoNaData(int idMedico, DateTime data)
-        {
-            if (!Agendas.TryGetValue((idMedico, data.Date), out HorasLivres? horasLivres))
-            {
-                horasLivres = new();
-                Agendas[(idMedico, data)] = horasLivres;
-            }
-
-            return horasLivres;
-        }
-
-        public bool this[int idMedico, DateTime data]
-        {
-            get => GetHorasLivresMedicoNaData(idMedico, data.Date)[data.Hour];
-
-            set => GetHorasLivresMedicoNaData(idMedico, data.Date)[data.Hour] = value;
-        }
-
-        public DTOHorariosLivre[] ListarHorariosLivres()
-        {
-            List<DTOHorariosLivre> horariosLivres = new();
-
-            foreach(var agenda in Agendas)
-            {
-                var idMedico = agenda.Key.idMedico;
-                var data = agenda.Key.data;
-                var horasLivres = agenda.Value;
-
-                for (int hora = 0; hora < 24; hora++)
-                {
-                    if (horasLivres[hora])
-                        horariosLivres.Add(new DTOHorariosLivre { IdMedico = idMedico, Horario = data.AddHours(hora) });
-                }
-            }
-
-            return horariosLivres.ToArray();
-        }
+        return horariosLivre.ToArray();
     }
 
-    public async Task<DTOHorariosLivre[]> ListarHorariosLivres(int dias = 15)
-    {
-        AgendasMedicos agendasMedicos = new();
-
-        Dictionary<DayOfWeek, HorarioMedico[]> horariosSemana = new();
-
-        List<DTOHorariosLivre> horariosLivres = new();
-
-        DateTime dia = DateTime.Now.Date;
-        DateTime fim = dia.AddDays(dias);
-        while (dia.Date < fim.Date)
-        {
-            // Armazena horarios medicos da semana
-            if (!horariosSemana.ContainsKey(dia.DayOfWeek))
-                horariosSemana[dia.DayOfWeek] = await serviceHorarioMedico.ListarHorariosMedicoDiaSemana(dia.DayOfWeek);
-
-            var horarios = horariosSemana[dia.DayOfWeek];
-
-            // Registra horarios medicos como "diponivel"
-            foreach (var horario in horarios)
-            {
-                for (int hora = horario.Periodo.HoraInicial.Hours; hora < horario.Periodo.HoraFinal.Hours; hora++)
-                    agendasMedicos[horario.IdMedico, dia.Date.AddHours(hora)] = true;
-            }
-
-            dia = dia.Date.AddDays(1);
-        }
-
-        // Registra consultas marcadas como "ocupado"
-        var consultas = await repositoryConsulta.ListarProximasConsultas(dias);
-        foreach (var consulta in consultas)
-            agendasMedicos[consulta.IdMedico, consulta.DataHora] = false;
-
-        return agendasMedicos.ListarHorariosLivres();
-    }
-
-    public async Task RegistrarConsulta(int pacienteId, int medicoId, DateTime horario)
+    public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string justificativaCancelamento)
     {
         using (var transacao = helperTransacao.CriaTransacao())
-            await repositoryConsulta.RegistrarConsulta(new Consulta { IdPaciente = pacienteId, IdMedico = medicoId, DataHora = horario });
+        {
+            if (statusConsulta == StatusConsulta.Pendente)
+                throw new ArgumentException("Status de consulta inválido.");
+
+            Consulta? consulta = await repositoryConsulta.ResgatarConsultaPorId(idConsulta);
+            if (consulta == null)
+                throw new ArgumentException("Consulta não encontrada.");
+
+            if ((statusConsulta == StatusConsulta.Agendada || statusConsulta == StatusConsulta.Recusada) && consulta.StatusConsulta != StatusConsulta.Pendente)
+                throw new InvalidOperationException("Não é possivel aceitar ou recusar consulta que não esteja pendente.");
+
+            if (statusConsulta == StatusConsulta.Cancelada && consulta.StatusConsulta != StatusConsulta.Agendada)
+                throw new InvalidOperationException("Não é possivel cancelar consulta não agendada.");
+
+            consulta.StatusConsulta = statusConsulta;
+            consulta.JustificativaCancelamento = justificativaCancelamento;
+
+            await repositoryConsulta.GravarStatusConsulta(consulta);
+
+            transacao.Gravar();
+        }
     }
+
+    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
+        => await repositoryConsulta.ListarConsultasPendentesConfirmacaoMedico(idMedico);
+
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente)
+        => await repositoryConsulta.ListarConsultasAtivasPaciente(idPaciente);
+
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data)
+        => await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data);
 }

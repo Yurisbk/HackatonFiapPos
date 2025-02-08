@@ -7,9 +7,6 @@ namespace Service.Service;
 
 public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositoryHorarioMedico repositoryHorarioMedico, HelperTransacao helperTransacao) : IServiceHorarioMedico
 {
-    public async Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana) =>
-        await repositoryHorarioMedico.ListarHorariosMedicoDiaSemana(diaSemana);
-
     public async Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
         using (var transcao = helperTransacao.CriaTransacao())
@@ -34,4 +31,7 @@ public class ServiceHorarioMedico(IRepositoryMedico repositoryMedico, IRepositor
             await repositoryHorarioMedico.RegistrarHorariosMedicoDiaSemana(idMedico, diaSemana, periodos);
         }
     }
+
+    public async Task<HorarioMedico[]> ResgatarHorariosMedicoDiaSemana(int idMedico, DayOfWeek dayOfWeek) =>
+        await repositoryHorarioMedico.ResgatarHorariosMedicoDiaSemana(idMedico, dayOfWeek);
 }

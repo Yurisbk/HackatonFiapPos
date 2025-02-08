@@ -1,13 +1,18 @@
 ﻿using Domain.Entity;
+using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
 using Service.Helper;
 
 namespace Service.Service;
 
-public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IServiceHorarioMedico serviceHorarioMedico, HelperTransacao helperTransacao): IServiceCadastroMedico
+public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IServiceConsulta serviceConsulta, HelperTransacao helperTransacao): IServiceCadastroMedico
 {
-    public async Task<Medico?> ResgatarMedicoPorEmail(string email) => await repositorioMedico.ResgatarMedicoPorEmail(email);
+    public async Task<Medico?> ResgatarMedicoPorId(int id)
+        => await repositorioMedico.ResgatarMedicoPorId(id);
+
+    public async Task<Medico?> ResgatarMedicoPorCRM(string crm) 
+        => await repositorioMedico.ResgatarMedicoPorCRM(crm);
 
     public async Task GravarMedico(Medico medico)
     {
@@ -28,7 +33,10 @@ public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IService
     {
         using (var transacao = helperTransacao.CriaTransacao())
         {
-            await repositorioMedico.ExcluirMedico(id);
+            // Lista e cancela consultas do medico com justificativa de exclusão
+            var consultasAtivas = await serviceConsulta.ListarConsultasAtivasMedico(id, null);
+            foreach (var consultaAtiva in consultasAtivas)
+                await serviceConsulta.GravarStatusConsulta(consultaAtiva.Id!.Value, StatusConsulta.Cancelada, "Médico desligado do sistema.");
 
             transacao.Gravar();
         }
@@ -37,16 +45,6 @@ public class ServiceCadastroMedico(IRepositoryMedico repositorioMedico, IService
     public async Task<string[]> ListarEspecialidadeMedicas() 
         => await repositorioMedico.ListarEspecialidadesMedicas();
 
-    public async Task<Medico[]> ListarMedicos(string especialidade, DayOfWeek? atendeDiaSemana)
-    {
-        var medicos = await repositorioMedico.ListarMedicosPorEspecialidade(especialidade);
-
-        if (atendeDiaSemana != null)
-        {
-            var horarios = await serviceHorarioMedico.ListarHorariosMedicoDiaSemana(atendeDiaSemana.Value);
-            medicos = medicos.Where(m => horarios.Any(h => h.IdMedico == m.Id)).ToArray();
-        }
-
-        return medicos;
-    }        
+    public async Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade) 
+        => await repositorioMedico.ListarMedicosDisponiveisNaEspecialidade(especialidade);
 }

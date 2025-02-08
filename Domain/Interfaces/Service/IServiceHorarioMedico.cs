@@ -4,6 +4,6 @@ namespace Domain.Interfaces.Service;
 
 public interface IServiceHorarioMedico
 {
-    Task<HorarioMedico[]> ListarHorariosMedicoDiaSemana(DayOfWeek diaSemana);
     Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos);
+    Task<HorarioMedico[]> ResgatarHorariosMedicoDiaSemana(int idMedico, DayOfWeek dayOfWeek);
 }

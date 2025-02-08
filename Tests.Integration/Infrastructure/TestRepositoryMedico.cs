@@ -40,8 +40,8 @@ public class TestRepositoryMedico(WebAppFixture webAppFixture) : TestBaseWebApp(
             var medicoCadastro = await repositoryMedico.ResgatarMedicoPorId(medico.Id!.Value);
             Assert.Equal(medico.CPF, medicoCadastro?.CPF);
 
-            medicoCadastro = await repositoryMedico.ResgatarMedicoPorEmail(medico.EMail!);
-            Assert.Equal(medico.EMail, medicoCadastro?.EMail);
+            medicoCadastro = await repositoryMedico.ResgatarMedicoPorCRM(medico.CRM!);
+            Assert.Equal(medico.CRM, medicoCadastro?.CRM);
 
             // Testa alteração
 

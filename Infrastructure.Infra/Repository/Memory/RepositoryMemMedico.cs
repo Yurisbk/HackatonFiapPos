@@ -19,12 +19,12 @@ public class RepositoryMemMedico : IRepositoryMedico
         }
     }
 
-    public async Task<Medico?> ResgatarMedicoPorEmail(string email)
+    public async Task<Medico?> ResgatarMedicoPorCRM(string crm)
     {
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.Medicos.FirstOrDefault(p => p.EMail == email)?.DeepClone();
+            return MemDB.Medicos.FirstOrDefault(p => p.CRM == crm)?.DeepClone();
         }
         finally
         {
@@ -104,12 +104,14 @@ public class RepositoryMemMedico : IRepositoryMedico
         }
     }
 
-    public async Task<Medico[]> ListarMedicosPorEspecialidade(string especialidade)
+    public async Task<Medico[]> ListarMedicosDisponiveisNaEspecialidade(string especialidade)
     {
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.Medicos.Where(medico => medico.Especialidade == especialidade).ToArray();
+            var medicos = MemDB.Medicos.Where(medico => medico.Especialidade == especialidade).ToArray();
+
+            return medicos.Where(medico => MemDB.HorariosMedicos.Any(HorarioMedico => HorarioMedico.IdMedico == medico.Id)).ToArray();
         }
         finally
         {

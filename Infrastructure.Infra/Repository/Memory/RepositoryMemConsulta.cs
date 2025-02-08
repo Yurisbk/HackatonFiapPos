@@ -1,4 +1,5 @@
 ﻿using Domain.Entity;
+using Domain.Enum;
 using Domain.Interfaces.Repository;
 
 namespace Infrastructure.Repository.Memory;
@@ -12,7 +13,9 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         {
             ArgumentNullException.ThrowIfNull(consulta);
 
-            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora, "Medico ja tem consulta marcada neste horário.");
+            MemDB.Consultas.CheckUK(c => c.IdMedico == consulta.IdMedico && c.DataHora == consulta.DataHora  && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Medico ja tem consulta marcada neste horário.");
+
+            MemDB.Consultas.CheckUK(c => c.IdPaciente == consulta.IdPaciente && c.DataHora == consulta.DataHora && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada), "Paciente ja tem outra consulta marcada neste horário.");
 
             MemDB.Medicos.CheckFK(consulta.IdMedico, "Medico não encontrado.");
             MemDB.Pacientes.CheckFK(consulta.IdPaciente, "Paciente não encontrado.");
@@ -25,16 +28,66 @@ public class RepositoryMemConsulta : IRepositoryConsulta
         }
     }
 
-    public async Task<Consulta[]> ListarProximasConsultas(int dias = 15)
+    public async Task<Consulta?> ResgatarConsultaPorId(int idConsulta)
     {
         await MemDB.DBLock.WaitAsync();
         try
         {
-            return MemDB.Consultas
-            .Where(c =>
-                c.DataHora.Date >= DateTime.Now.Date &&
-                c.DataHora.Date <= DateTime.Now.Date.AddDays(dias))
-            .ToArray();
+            return MemDB.Consultas.FirstOrDefault(c => c.Id == idConsulta);
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
+    public async Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            return MemDB.Consultas.Where(c => c.StatusConsulta == StatusConsulta.Pendente && c.IdMedico == idMedico).ToArray();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
+    public async Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            return MemDB.Consultas.Where(c => c.StatusConsulta == StatusConsulta.Agendada && c.IdPaciente == idPaciente).ToArray();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
+    public async Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            MemDB.Medicos.CheckFK(idMedico, "Medico não encontrado.");
+
+            return MemDB.Consultas.Where(c => c.IdMedico == idMedico && c.DataHora.Date == (data?.Date ?? c.DataHora.Date) && (c.StatusConsulta == StatusConsulta.Pendente || c.StatusConsulta == StatusConsulta.Agendada)).ToArray();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
+    public async Task GravarStatusConsulta(Consulta consulta)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            MemDB.Consultas.Update(consulta);
         }
         finally
         {
