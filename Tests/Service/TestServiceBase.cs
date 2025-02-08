@@ -2,6 +2,7 @@
 using Domain.Interfaces.Service;
 using Infrastructure.Repository.Memory;
 using Service.Service;
+using System.Net.Http;
 
 namespace Tests.Service;
 
@@ -24,6 +25,8 @@ public class TestServiceBase
     protected IServiceConsulta ServiceConsulta { get; }
     protected IServiceCadastroMedico ServiceCadastroMedico { get; }
     protected IServiceCadastroPaciente ServiceCadastroPaciente { get; }
+    protected IServiceCadastroUsuario ServiceCadastroUsuario { get; }
+    protected IHttpClientFactory httpClient { get; }
 
     public TestServiceBase()
     {
@@ -31,12 +34,12 @@ public class TestServiceBase
         RepositoryMedico = new RepositoryMemMedico();
         RepositoryConsulta = new RepositoryMemConsulta();
         RepositoryHorarioMedico = new RepositoryMemHorarioMedico();
-
         TransacaoFactory = new FakeTransacaoFactory();
 
+        ServiceCadastroUsuario = new ServiceCadastroUsuario(httpClient, RepositoryPaciente);
         ServiceHorarioMedico = new ServiceHorarioMedico(RepositoryHorarioMedico, RepositoryMedico, TransacaoFactory);
         ServiceConsulta = new ServiceConsulta(RepositoryConsulta, RepositoryMedico, ServiceHorarioMedico, TransacaoFactory);
-        ServiceCadastroMedico = new ServiceCadastroMedico(RepositoryMedico, ServiceConsulta, TransacaoFactory);
-        ServiceCadastroPaciente = new ServiceCadastroPaciente(RepositoryPaciente, ServiceConsulta, TransacaoFactory);
+        ServiceCadastroMedico = new ServiceCadastroMedico(RepositoryMedico, ServiceConsulta, TransacaoFactory, ServiceCadastroUsuario);
+        ServiceCadastroPaciente = new ServiceCadastroPaciente(RepositoryPaciente, ServiceConsulta, TransacaoFactory, ServiceCadastroUsuario);
     }
 }

@@ -32,6 +32,19 @@ public class RepositoryMemPaciente : IRepositoryPaciente
         }
     }
 
+    public async Task<Paciente?> ResgatarPacientePorCpf(string cpf)
+    {
+        await MemDB.DBLock.WaitAsync();
+        try
+        {
+            return MemDB.Pacientes.FirstOrDefault(p => p.CPF == cpf)?.DeepClone();
+        }
+        finally
+        {
+            MemDB.DBLock.Release();
+        }
+    }
+
     public async Task RegistarNovoPaciente(Paciente paciente)
     {
         await MemDB.DBLock.WaitAsync();

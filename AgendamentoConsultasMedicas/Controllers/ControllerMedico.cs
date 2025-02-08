@@ -2,6 +2,7 @@
 using Domain.Entity;
 using Domain.Interfaces.Service;
 using Microsoft.AspNetCore.Mvc;
+using Service.Service;
 
 namespace AgendamentoConsultasMedicas.Controllers;
 
@@ -9,16 +10,39 @@ namespace AgendamentoConsultasMedicas.Controllers;
 [Route("api/medico")]
 public class ControllerMedico(IServiceCadastroMedico serviceCadastroMedico, IServiceHorarioMedico serviceHorarioMedico) : ControllerBase
 {
+
     [HttpPost]
-    [Route("gravar")]
+    [Route("cadastrar")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
-    public async Task<IActionResult> GravarMedico([FromBody] DTOMedico medico)
+    public async Task<IActionResult> GravarMedico([FromBody] DTOCreateMedico paciente)
     {
-        await serviceCadastroMedico.GravarMedico((Medico)medico!);
+        DTOCreateUsuarioResponse? authResponse = await serviceCadastroMedico.CriarMedico(paciente);
 
-        return Accepted();
+        return Accepted(authResponse.Auth_Id);
+    }
+
+    [HttpPost]
+    [Route("login")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiError))]
+    public async Task<IActionResult> Login([FromBody] DTOLoginMedico loginRequest)
+    {
+        try
+        {
+            var authResponse = await serviceCadastroMedico.LoginMedico(loginRequest);
+            return Ok(authResponse);
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            return Unauthorized(e.Message);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpDelete]

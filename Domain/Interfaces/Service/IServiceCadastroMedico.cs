@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Domain.DTO;
+using Domain.Entity;
 
 namespace Domain.Interfaces.Service;
 
@@ -10,4 +11,6 @@ public interface IServiceCadastroMedico
     Task ExcluirMedico(int id);
     Task<string[]> ListarEspecialidadeMedicas();
     Task<Medico[]> ListarMedicosAtivosNaEspecialidade(string especialidade);
+    Task<DTOAutenticacaoResponse?> LoginMedico(DTOLoginMedico loginRequest);
+    Task<DTOCreateUsuarioResponse?> CriarMedico(DTOCreateMedico createPaciente);
 }
