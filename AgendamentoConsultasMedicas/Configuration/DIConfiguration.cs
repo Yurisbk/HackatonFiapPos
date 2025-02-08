@@ -3,7 +3,6 @@ using Domain.Interfaces.Service;
 using Infrastructure.Repository.DB;
 using Infrastructure.Repository.Memory;
 using Npgsql;
-using Service.Helper;
 using Service.Service;
 using System.Data;
 
@@ -20,15 +19,16 @@ public static class DIConfiguration
             services.AddScoped<IRepositoryHorarioMedico, RepositoryMemHorarioMedico>();
             services.AddScoped<IRepositoryConsulta, RepositoryMemConsulta>();
             services.AddScoped<IDbConnection>(c => null);
+            services.AddScoped<ITransacao, TransacaoFakeMemoria>();
         }
         else
         {
             var connectionstring = configuration.GetValue<string>("ConnectionStringPostgres");
             services.AddScoped<IDbConnection>((connection) => new NpgsqlConnection(connectionstring));
+            services.AddScoped<ITransacao, DBTransacao>();
         }
 
-        services.AddScoped<ITransacao, DBTransacao>();
-        services.AddScoped<HelperTransacao>();
+        services.AddScoped<ITransacaoFactory, TransacaoFactory>();
 
         services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
         services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();

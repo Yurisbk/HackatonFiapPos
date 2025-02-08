@@ -1,21 +1,20 @@
-﻿using Domain.Interfaces.Repository;
-using Domain.Entity;
-using Domain.Interfaces.Service;
-using Service.Helper;
+﻿using Domain.Entity;
 using Domain.Enum;
+using Domain.Interfaces.Repository;
+using Domain.Interfaces.Service;
 
 namespace Service.Service;
 
 public class ServiceCadastroPaciente(
     IRepositoryPaciente repositorioPaciente, 
     IServiceConsulta serviceConsulta, 
-    HelperTransacao helperTransacao) : IServiceCadastroPaciente
+    ITransacaoFactory transacaoFactory) : IServiceCadastroPaciente
 {
     public async Task<Paciente?> ResgatarPacientePorEmail(string email) => await repositorioPaciente.ResgatarPacientePorEmail(email);
 
     public async Task GravarPaciente(Paciente paciente)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             ArgumentNullException.ThrowIfNull(paciente);
 
@@ -32,7 +31,7 @@ public class ServiceCadastroPaciente(
 
     public async Task ExcluirPaciente(int id)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             var consultasAtivas = await serviceConsulta.ListarConsultasAtivasPaciente(id);
             foreach (var consultaAtiva in consultasAtivas)

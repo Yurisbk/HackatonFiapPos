@@ -1,9 +1,9 @@
 ﻿using Domain.Entity;
 using Domain.Interfaces.Repository;
+using Domain.Interfaces.Service;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Helper;
+using Tests.Helper;
 using Tests.Integration.Fixture;
-using Tests.Integration.Helper;
 
 namespace Tests.Integration.Infrastructure;
 
@@ -11,12 +11,12 @@ public class TestRepositoryHorarioMedico(WebAppFixture webAppFixture) : TestBase
 {
     IRepositoryHorarioMedico repositoryHorarioMedico => ServiceProvider.GetService<IRepositoryHorarioMedico>()!;
     IRepositoryMedico repositoryMedico => ServiceProvider.GetService<IRepositoryMedico>()!;
-    HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!;
+    ITransacaoFactory transacaoFactory => ServiceProvider.GetService<ITransacaoFactory>()!;
 
     [Fact]
     public async Task TestCadastroHorarioMedico()
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             Medico medico = HelperGeracaoEntidades.CriaMedicoValido()!;
             await repositoryMedico.RegistarNovoMedico(medico);

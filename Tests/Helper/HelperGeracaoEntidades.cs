@@ -1,6 +1,6 @@
 ﻿using Domain.Entity;
 
-namespace Tests.Integration.Helper;
+namespace Tests.Helper;
 
 public class HelperGeracaoEntidades()
 {

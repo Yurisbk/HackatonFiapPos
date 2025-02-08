@@ -1,18 +1,17 @@
 ﻿using Domain.Entity;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
-using Service.Helper;
 
 namespace Service.Service;
 
 public class ServiceHorarioMedico(
-    IRepositoryMedico repositoryMedico, 
     IRepositoryHorarioMedico repositoryHorarioMedico, 
-    HelperTransacao helperTransacao) : IServiceHorarioMedico
+    IRepositoryMedico repositoryMedico, 
+    ITransacaoFactory transacaoFactory) : IServiceHorarioMedico
 {
     public async Task RegistrarHorariosMedicoDiaSemana(int idMedico, DayOfWeek diaSemana, params Periodo[] periodos)
     {
-        using (var transcao = helperTransacao.CriaTransacao())
+        using (var transcao = transacaoFactory.CriaTransacao())
         {
             ArgumentNullException.ThrowIfNull(periodos);
 

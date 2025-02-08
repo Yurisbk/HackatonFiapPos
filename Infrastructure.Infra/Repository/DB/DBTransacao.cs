@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces.Repository;
+﻿using Domain.Interfaces.Service;
 using System.Data;
 
 namespace Infrastructure.Repository.DB;

@@ -1,20 +1,20 @@
 ﻿using Domain.Interfaces.Repository;
+using Domain.Interfaces.Service;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Helper;
+using Tests.Helper;
 using Tests.Integration.Fixture;
-using Tests.Integration.Helper;
 
 namespace Tests.Integration.Infrastructure;
 
 public class TestRepositoryPaciente(WebAppFixture webAppFixture) : TestBaseWebApp(webAppFixture)
 {
     IRepositoryPaciente repositoryPaciente => ServiceProvider.GetService<IRepositoryPaciente>()!;
-    HelperTransacao helperTransacao => ServiceProvider.GetService<HelperTransacao>()!;
+    ITransacaoFactory transacaoFactory => ServiceProvider.GetService<ITransacaoFactory>()!;
 
     [Fact]
     public async Task TestCadastroPaciente()
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             // Testa registro
 

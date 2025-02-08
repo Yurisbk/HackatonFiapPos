@@ -1,5 +1,7 @@
 ﻿using Domain.Entity;
+using Domain.Interfaces.Service;
 using Force.DeepCloner;
+using System.Data;
 
 namespace Infrastructure.Repository.Memory;
 
@@ -53,4 +55,17 @@ public static class MemDB
 
     static public void Delete<T>(this List<T> lista, int id) where T : Entidade 
         => lista.RemoveAt(lista.IndexOfId(id));
+}
+
+public class TransacaoFakeMemoria : ITransacao
+{
+    public void Gravar()
+    {
+
+    }
+
+    public void Dispose()
+    {
+        
+    }
 }

@@ -2,14 +2,13 @@
 using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
-using Service.Helper;
 
 namespace Service.Service;
 
 public class ServiceCadastroMedico(
     IRepositoryMedico repositorioMedico, 
     IServiceConsulta serviceConsulta, 
-    HelperTransacao helperTransacao): IServiceCadastroMedico
+    ITransacaoFactory transacaoFactory): IServiceCadastroMedico
 {
     public async Task<Medico?> ResgatarMedicoPorId(int id)
         => await repositorioMedico.ResgatarMedicoPorId(id);
@@ -19,7 +18,7 @@ public class ServiceCadastroMedico(
 
     public async Task GravarMedico(Medico medico)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             medico.Validar();
 
@@ -34,7 +33,7 @@ public class ServiceCadastroMedico(
 
     public async Task ExcluirMedico(int id)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             // Lista e cancela consultas do medico com justificativa de exclusão
             var consultasAtivas = await serviceConsulta.ListarConsultasAtivasMedico(id, null);

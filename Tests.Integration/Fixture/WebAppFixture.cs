@@ -1,5 +1,4 @@
 ﻿using AgendamentoConsultasMedicas;
-using Domain.Interfaces.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

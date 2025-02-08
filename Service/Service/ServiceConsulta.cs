@@ -3,15 +3,14 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
-using Service.Helper;
 
 namespace Service.Service;
 
 public class ServiceConsulta(
     IRepositoryConsulta repositoryConsulta,
-    IServiceHorarioMedico serviceHorarioMedico,
     IRepositoryMedico repositoryMedico,
-    HelperTransacao helperTransacao) : IServiceConsulta
+    IServiceHorarioMedico serviceHorarioMedico,
+    ITransacaoFactory transacaoFactory) : IServiceConsulta
 {
     public async Task<DTOHorariosLivre[]> ListarAgendaMedico(int idMedico, int dias = 7)
     {
@@ -57,7 +56,7 @@ public class ServiceConsulta(
 
     public async Task RegistrarConsulta(int idMedico, int idPaciente, DateTime data)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             // Arredonda data para horario cheia
             data = new DateTime(data.Year, data.Month, data.Day, data.Hour, 0, 0);
@@ -104,7 +103,7 @@ public class ServiceConsulta(
 
     public async Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string justificativaCancelamento)
     {
-        using (var transacao = helperTransacao.CriaTransacao())
+        using (var transacao = transacaoFactory.CriaTransacao())
         {
             if (statusConsulta == StatusConsulta.Pendente)
                 throw new ArgumentException("Status de consulta inválido.");
