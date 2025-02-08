@@ -46,11 +46,11 @@ public class TestRepositoryConsulta(WebAppFixture webAppFixture) : TestBaseWebAp
             Assert.Single(consultas);
 
             consultas = await repositoryConsulta.ListarConsultasAtivasPaciente(paciente.Id!.Value, DateTime.Today);
-            Assert.Empty(consultas);
+            Assert.Single(consultas);
 
             // Testa gravação de status da consulta
 
-            consulta.StatusConsulta = Domain.Enum.StatusConsulta.Agendada;
+            consulta.StatusConsulta = Domain.Enum.StatusConsulta.Confirmada;
             await repositoryConsulta.GravarStatusConsulta(consulta);
 
             // Assegura troca de status

@@ -10,5 +10,6 @@ public interface IServiceConsulta
     Task<Consulta[]> ListarConsultasPendentesConfirmacaoMedico(int idMedico);
     Task<Consulta[]> ListarConsultasAtivasPaciente(int idPaciente, DateTime? data = null);
     Task<Consulta[]> ListarConsultasAtivasMedico(int idMedico, DateTime? data = null);
-    Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string justificativaCancelamento);
+    Task GravarStatusConsulta(int idConsulta, StatusConsulta statusConsulta, string? justificativaCancelamento = null);
+    Task RegistrarConsulta(int idMedico, int idPaciente, DateTime data);
 }
