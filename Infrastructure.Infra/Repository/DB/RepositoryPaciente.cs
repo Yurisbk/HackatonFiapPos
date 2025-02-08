@@ -21,6 +21,11 @@ public class RepositoryPaciente(IDbTransaction dbTransaction) : IRepositoryPacie
         throw new NotImplementedException();
     }
 
+    public Task<Paciente?> ResgatarPacientePorCpf(string cpf)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Paciente?> ResgatarPacientePorEmail(string email)
     {
         throw new NotImplementedException();
