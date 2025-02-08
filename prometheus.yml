@@ -16,6 +16,10 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets: ['postgres_exporter:9187']
+  - job_name: 'api-auth-server'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['auth-server:8080']
   # - job_name: 'api'
   #   metrics_path: /metrics
   #   static_configs:

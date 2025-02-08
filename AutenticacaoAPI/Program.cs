@@ -1,6 +1,7 @@
 using ContatoAPI.Extension;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,11 @@ app.UseHttpsRedirection();
 app.UseMiddleware<TokenListaNegraMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
+#region .::Prometheus::.
+app.UseMetricServer(); //endpoint /metrics
+app.UseHttpMetrics();
+#endregion
 
 app.MapControllers();
 

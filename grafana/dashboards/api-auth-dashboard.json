@@ -1,0 +1,146 @@
+{
+    "annotations": {
+      "list": []
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 0,
+    "panels": [
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[1m])) by (method, endpoint)",
+            "format": "time_series",
+            "refId": "A"
+          }
+        ],
+        "title": "API Requests Per Second",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le, method, endpoint)) * 1000",
+            "format": "time_series",
+            "refId": "A"
+          }
+        ],
+        "title": "API 95th Percentile Latency",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 9
+        },
+        "id": 3,
+        "targets": [
+          {
+            "expr": "((avg(rate(http_request_duration_seconds_sum[1m])) / avg(rate(http_request_duration_seconds_count[1m]))) * 1000)",
+            "format": "time_series",
+            "refId": "A"
+          }
+        ],
+        "title": "API Average Latency (ms)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": "Prometheus",
+        "fieldConfig": { "defaults": {}, "overrides": [] },
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "id": 4,
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\"}[1m])) by (endpoint)",
+            "format": "time_series",
+            "refId": "A"
+          }
+        ],
+        "title": "API Error Rate",
+        "type": "timeseries"
+      }
+    ],
+    "schemaVersion": 40,
+    "style": "dark",
+    "tags": [
+      "api",
+      "auth"
+    ],
+    "templating": {
+      "list": [
+        {
+          "allValue": null,
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "Prometheus",
+          "definition": "label_values(http_requests_total, endpoint)",
+          "includeAll": true,
+          "label": "endpoint",
+          "multi": true,
+          "name": "endpoint",
+          "options": [],
+          "query": "label_values(http_requests_total, endpoint)",
+          "refresh": 1,
+          "regex": "",
+          "type": "query"
+        },
+        {
+          "allValue": null,
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "Prometheus",
+          "definition": "label_values(http_requests_total, method)",
+          "includeAll": true,
+          "label": "method",
+          "multi": true,
+          "name": "method",
+          "options": [],
+          "query": "label_values(http_requests_total, method)",
+          "refresh": 1,
+          "regex": "",
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "title": "API Auth Server Management Dashboard",
+    "uid": "api-auth-management-dashboard",
+    "version": 1
+  }
+  

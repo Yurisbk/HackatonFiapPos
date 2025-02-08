@@ -7380,34 +7380,47 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Paulo Neto\\.nuget\\packages\\": {}
+    "C:\\Users\\Lerri\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projetos\\Hackaton\\Infrastructure.Infra\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\Lerri\\Fiap-A-Bomba-Final\\HackatonFiapPos\\Infrastructure.Infra\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "C:\\Projetos\\Hackaton\\Infrastructure.Infra\\Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\Paulo Neto\\.nuget\\packages\\",
-      "outputPath": "C:\\Projetos\\Hackaton\\Infrastructure.Infra\\obj\\",
+      "projectPath": "C:\\Users\\Lerri\\Fiap-A-Bomba-Final\\HackatonFiapPos\\Infrastructure.Infra\\Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\Lerri\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Lerri\\Fiap-A-Bomba-Final\\HackatonFiapPos\\Infrastructure.Infra\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\Offline Packages",
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Paulo Neto\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Lerri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 20.2.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\DevExpress 20.2\\Components\\System\\Components\\Packages": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Projetos\\Hackaton\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Projetos\\Hackaton\\Domain\\Domain.csproj"
+            "C:\\Users\\Lerri\\Fiap-A-Bomba-Final\\HackatonFiapPos\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\Lerri\\Fiap-A-Bomba-Final\\HackatonFiapPos\\Domain\\Domain.csproj"
             }
           }
         }
@@ -7421,7 +7434,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -7470,7 +7484,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
