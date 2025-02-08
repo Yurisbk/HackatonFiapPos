@@ -1,4 +1,5 @@
 using AgendamentoConsultasMedicas.Configuration;
+using ContatoAPI.Extension;
 using Domain.DTO;
 using MassTransit;
 using Npgsql;
@@ -15,9 +16,12 @@ public class Program
             .AddJsonFile("appsettings.json")
             .Build();
 
+        builder.Services.AddInjecoesDependencias();
+        builder.Services.AddConfiguracaoAPIAuthenticacao(configuration);
+        builder.Services.AddIdentityConfiguration(configuration);
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddDocumentacaoSwagger();
 
         // Configure dependency injection
         builder.Services.DIConfigure(builder.Configuration);

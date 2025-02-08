@@ -1,6 +1,7 @@
 ﻿using Domain.DTO;
 using Domain.Entity;
 using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgendamentoConsultasMedicas.Controllers;
@@ -32,7 +33,7 @@ public class ControllerPaciente(IServiceCadastroPaciente serviceCadastroPaciente
 
         return Accepted();
     }
-
+    [Authorize]
     [HttpGet]
     [Route("resgatarPorEmail")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DTOPaciente))]
