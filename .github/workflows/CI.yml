@@ -49,4 +49,4 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run unit tests
-        run: dotnet test --no-build --filter Category=Unity --verbosity normal
+        run: dotnet test --no-build --verbosity normal
