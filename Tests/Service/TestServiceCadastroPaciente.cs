@@ -1,5 +1,4 @@
-﻿using Domain.Interfaces.Service;
-using Tests.Helper;
+﻿using Tests.Helper;
 
 namespace Tests.Service;
 

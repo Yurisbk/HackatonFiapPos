@@ -1,4 +1,5 @@
-﻿using Tests.Helper;
+﻿using Domain.Entity;
+using Tests.Helper;
 
 namespace Tests.Service;
 
@@ -47,6 +48,7 @@ public class TestServiceCadastroMedico: TestServiceBase
                 var medico = HelperGeracaoEntidades.CriaMedicoValido();
                 medico.Especialidade = especialidadeTeste;
                 await ServiceCadastroMedico.GravarMedico(medico);
+                await ServiceHorarioMedico.RegistrarHorariosMedicoDiaSemana(medico.Id!.Value, DayOfWeek.Monday, [new Periodo(8, 18)]);
             }
 
             const string especialidadeTeste2 = "especialidade teste2";
@@ -56,6 +58,7 @@ public class TestServiceCadastroMedico: TestServiceBase
                 var medico = HelperGeracaoEntidades.CriaMedicoValido();
                 medico.Especialidade = especialidadeTeste2;
                 await ServiceCadastroMedico.GravarMedico(medico);
+                await ServiceHorarioMedico.RegistrarHorariosMedicoDiaSemana(medico.Id!.Value, DayOfWeek.Monday, [new Periodo(8, 18)]);
             }
 
             var especialidades = await ServiceCadastroMedico.ListarEspecialidadeMedicas();
