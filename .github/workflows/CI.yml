@@ -50,3 +50,23 @@ jobs:
 
       - name: Run unit tests
         run: dotnet test --no-build --verbosity normal
+
+  push_to_main:
+    name: Push to Main
+    runs-on: ubuntu-latest
+    needs: [dockerhub, build_and_test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Merge feature/mesh into main
+        run: |
+          git fetch origin
+          git checkout main
+          git merge origin/feature/mesh --no-ff -m "Auto-merge feature/mesh into main"
+          git push origin main
