@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   push:
     branches:
@@ -50,3 +54,27 @@ jobs:
 
       - name: Run unit tests
         run: dotnet test --no-build --verbosity normal
+
+  push_to_main:
+    name: Push feature/mesh to Main
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/feature/mesh'
+    needs: [dockerhub, build_and_test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Force merge feature/mesh into main with conflict resolution
+        run: |
+          git fetch origin
+          git checkout main
+          git merge origin/feature/mesh --allow-unrelated-histories || true
+          git diff --name-only --diff-filter=U | xargs git checkout --theirs || true
+          git add .
+          git commit -m "Resolve merge conflicts automatically" || true
+          git push origin main
