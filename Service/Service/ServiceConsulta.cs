@@ -42,7 +42,7 @@ public class ServiceConsulta(
             }
 
             // Cria um array com todas as horas livres do médico no dia
-            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial.Hours, horario.Periodo.HoraFinal.Hours - horario.Periodo.HoraInicial.Hours + 1)).ToArray();
+            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial, horario.Periodo.HoraFinal - horario.Periodo.HoraInicial + 1)).ToArray();
 
             // Lista as consultas do medico no dia e remove as horas ocupadas
             var consultas = await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data.Date);

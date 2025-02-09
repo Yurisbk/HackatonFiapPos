@@ -4,23 +4,23 @@ namespace Domain.Entity;
 
 public struct Periodo: IValidavel
 {
-    public TimeSpan HoraInicial { get; set; }
-    public TimeSpan HoraFinal { get; set; }
+    public int HoraInicial { get; set; }
+    public int HoraFinal { get; set; }
 
-    public TimeSpan Duracao => HoraFinal - HoraInicial;
+    public int Duracao => HoraFinal - HoraInicial;
 
-    public Periodo(double horaInicial, double horaFinal)
+    public Periodo(int horaInicial, int horaFinal)
     {
-        HoraInicial = TimeSpan.FromHours(horaInicial);
-        HoraFinal = TimeSpan.FromHours(horaFinal);
+        HoraInicial = horaInicial;
+        HoraFinal = horaFinal;
     }
 
     public void Validar()
     {
-        if ((HoraInicial.TotalDays > 1) || (HoraFinal.TotalDays > 1))
+        if ((HoraInicial > 23) || (HoraFinal > 23))
             throw new Exception("Hora inicial e hora final devem estar entre as 24 horas do dia");
 
-        if ((HoraInicial.TotalHours < 0) || (HoraFinal.TotalHours < 0))
+        if ((HoraInicial < 0) || (HoraFinal < 0))
             throw new Exception("Hora inválida");
 
         if (HoraInicial >= HoraFinal)
@@ -38,7 +38,7 @@ public struct Periodo: IValidavel
         return true;
     }
 
-    public bool ContemHora(int hora) => (HoraInicial.TotalHours <= hora) && (HoraFinal.TotalHours >= hora);
+    public bool ContemHora(int hora) => (HoraInicial <= hora) && (HoraFinal >= hora);
 
     public override string ToString() => $"{HoraInicial} - {HoraFinal}";
 
@@ -68,7 +68,7 @@ public class HorarioMedico : Entidade, IValidavel
         
     }
 
-    public HorarioMedico(DayOfWeek diaSemana, double horaInicial, double horaFinal)
+    public HorarioMedico(DayOfWeek diaSemana, int horaInicial, int horaFinal)
     {
         DiaSemana = diaSemana;
         Periodo = new Periodo(horaInicial, horaFinal);
