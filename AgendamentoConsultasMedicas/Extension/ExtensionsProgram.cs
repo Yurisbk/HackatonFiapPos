@@ -1,12 +1,9 @@
-﻿using Domain.DTO;
-using Domain.Interfaces.Repository;
+﻿using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
 using Infrastructure.DataAutenticador;
 using Infrastructure.Repository.Memory;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Service;
@@ -17,18 +14,8 @@ namespace ContatoAPI.Extension;
 
 public static class ExtensionsProgram
 {
-    public static IServiceCollection AddInjecoesDependencias(this IServiceCollection services)
-    {
-        services.AddScoped<IServiceCadastroPaciente, ServiceCadastroPaciente>();
-        services.AddScoped<IRepositoryPaciente, RepositoryMemPaciente>();        
-        services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();
-        services.AddScoped<IRepositoryMedico, RepositoryMemMedico>();
-        services.AddScoped<IServiceCadastroUsuario, ServiceCadastroUsuario>();
-        return services;
-    }
     public static IServiceCollection AddConfiguracaoAPIAuthenticacao(this IServiceCollection services, IConfiguration configuration)
     {
-
         var apiAutenticacao = configuration.GetValue<string>("APIAutenticacao");
         services.AddHttpClient("AutenticacaoAPI", client =>
         {
@@ -37,6 +24,7 @@ public static class ExtensionsProgram
         });
         return services;
     }
+
     public static IServiceCollection AddDocumentacaoSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>

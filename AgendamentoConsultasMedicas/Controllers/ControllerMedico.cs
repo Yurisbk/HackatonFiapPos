@@ -1,8 +1,6 @@
 ﻿using Domain.DTO;
-using Domain.Entity;
 using Domain.Interfaces.Service;
 using Microsoft.AspNetCore.Mvc;
-using Service.Service;
 
 namespace AgendamentoConsultasMedicas.Controllers;
 

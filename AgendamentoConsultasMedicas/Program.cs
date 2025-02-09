@@ -16,7 +16,6 @@ public class Program
             .AddJsonFile("appsettings.json")
             .Build();
 
-        builder.Services.AddInjecoesDependencias();
         builder.Services.AddConfiguracaoAPIAuthenticacao(configuration);
         builder.Services.AddIdentityConfiguration(configuration);
         builder.Services.AddControllers();

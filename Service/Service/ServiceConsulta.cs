@@ -3,13 +3,16 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Service.Service;
 
 public class ServiceConsulta(
     IRepositoryConsulta repositoryConsulta,
     IRepositoryMedico repositoryMedico,
+    IRepositoryPaciente repositoryPaciente,
     IServiceHorarioMedico serviceHorarioMedico,
+    IServiceNotificacao serviceNotificacao,
     ITransacaoFactory transacaoFactory) : IServiceConsulta
 {
     public async Task<DTOHorariosLivre[]> ListarAgendaMedico(int idMedico, int dias = 7)
@@ -39,7 +42,7 @@ public class ServiceConsulta(
             }
 
             // Cria um array com todas as horas livres do médico no dia
-            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial.Hours, horario.Periodo.HoraFinal.Hours - horario.Periodo.HoraInicial.Hours + 1)).ToArray();
+            int[] horasLivre = horariosMedico.SelectMany(horario => Enumerable.Range(horario.Periodo.HoraInicial, horario.Periodo.HoraFinal - horario.Periodo.HoraInicial + 1)).ToArray();
 
             // Lista as consultas do medico no dia e remove as horas ocupadas
             var consultas = await repositoryConsulta.ListarConsultasAtivasMedico(idMedico, data.Date);
@@ -131,6 +134,25 @@ public class ServiceConsulta(
             consulta.JustificativaCancelamento = justificativa;
 
             await repositoryConsulta.GravarStatusConsulta(consulta);
+
+            DTONotificacao notificacao = new();
+
+            Medico? medico = await repositoryMedico.ResgatarMedicoPorId(consulta.IdMedico);
+            if (medico == null)
+                throw new InvalidOperationException("Médico não encontrado.");
+
+            Paciente? paciente = await repositoryPaciente.ResgatarPacientePorId(consulta.IdPaciente);
+            if (paciente == null)
+                throw new InvalidOperationException("Paciente não encontrado.");            
+
+            notificacao.NomeMedico = medico.Nome;
+            notificacao.EmailMedico = medico.EMail;
+            notificacao.NomePaciente = paciente.Nome;
+            notificacao.EmailPaciente = paciente.EMail;
+            notificacao.HorarioConsulta = consulta.DataHora.ToString();
+            notificacao.Confirmacao = statusConsulta == StatusConsulta.Confirmada;
+
+            await serviceNotificacao.EnviaNotificacao(notificacao);
 
             transacao.Gravar();
         }
