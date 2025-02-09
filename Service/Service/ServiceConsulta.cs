@@ -3,13 +3,16 @@ using Domain.Entity;
 using Domain.Enum;
 using Domain.Interfaces.Repository;
 using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Service.Service;
 
 public class ServiceConsulta(
     IRepositoryConsulta repositoryConsulta,
     IRepositoryMedico repositoryMedico,
+    IRepositoryPaciente repositoryPaciente,
     IServiceHorarioMedico serviceHorarioMedico,
+    IServiceNotificacao serviceNotificacao,
     ITransacaoFactory transacaoFactory) : IServiceConsulta
 {
     public async Task<DTOHorariosLivre[]> ListarAgendaMedico(int idMedico, int dias = 7)
@@ -131,6 +134,25 @@ public class ServiceConsulta(
             consulta.JustificativaCancelamento = justificativa;
 
             await repositoryConsulta.GravarStatusConsulta(consulta);
+
+            DTONotificacao notificacao = new();
+
+            Medico? medico = await repositoryMedico.ResgatarMedicoPorId(consulta.IdMedico);
+            if (medico == null)
+                throw new InvalidOperationException("Médico não encontrado.");
+
+            Paciente? paciente = await repositoryPaciente.ResgatarPacientePorId(consulta.IdPaciente);
+            if (paciente == null)
+                throw new InvalidOperationException("Paciente não encontrado.");            
+
+            notificacao.NomeMedico = medico.Nome;
+            notificacao.EmailMedico = medico.EMail;
+            notificacao.NomePaciente = paciente.Nome;
+            notificacao.EmailPaciente = paciente.EMail;
+            notificacao.HorarioConsulta = consulta.DataHora.ToString();
+            notificacao.Confirmacao = statusConsulta == StatusConsulta.Confirmada;
+
+            await serviceNotificacao.EnviaNotificacao(notificacao);
 
             transacao.Gravar();
         }

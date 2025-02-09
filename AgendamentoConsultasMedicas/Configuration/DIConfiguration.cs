@@ -34,5 +34,8 @@ public static class DIConfiguration
         services.AddScoped<IServiceCadastroMedico, ServiceCadastroMedico>();
         services.AddScoped<IServiceHorarioMedico, ServiceHorarioMedico>();
         services.AddScoped<IServiceConsulta, ServiceConsulta>();
+        services.AddScoped<IServiceCadastroUsuario, ServiceCadastroUsuario>();
+
+        services.AddScoped<IServiceNotificacao, ServiceNotificacao>();
     }
 }
