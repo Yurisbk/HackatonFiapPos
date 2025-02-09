@@ -1,6 +1,0 @@
-@AgendamentoConsultasMedicas_HostAddress = http://localhost:5075
-
-GET {{AgendamentoConsultasMedicas_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
